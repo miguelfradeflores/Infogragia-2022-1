@@ -128,3 +128,40 @@ end
 
 print("fibonacci2", fibonacci2(8))
 print("fibonacci1", fibonacci(8))
+
+print("Hola " .. " mundo")
+
+numero2 = 23
+vacio = nil
+print( type( tostring(vacio)), tostring(print) )
+
+print( 23 + tonumber("12") )
+
+lista = {2,2,1,3,4,5,1}
+
+function set2(list) -- {2,1,3,4,5}
+	aux = {}
+	print(list)
+	for i, v in ipairs(list) do
+		valor_aux = v
+		existe = false
+		for k, l in ipairs(aux) do 
+			if valor_aux == l then
+				existe = true
+				break
+			end
+		end
+		if existe == false then
+			table.insert(aux, v)
+		end
+	end
+	print("Set final")
+	for i, v in ipairs(aux) do
+		print(i,v)
+	end
+end
+
+set2(lista)
+
+
+
