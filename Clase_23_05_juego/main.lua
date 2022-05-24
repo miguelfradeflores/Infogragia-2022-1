@@ -56,7 +56,7 @@ function crearManzanas(  cantidad, ancho, alto )
 		manzanas[i]:addEventListener( "touch", manzanas[i] )
 
 		posx = math.random(0, cw)
-		poxy = math.random(0, ch)
+		posy = math.random(0, ch)
 
 		transition.to(manzanas[i], {time =3000, x=posx, y=posy, onComplete= mover})
 
