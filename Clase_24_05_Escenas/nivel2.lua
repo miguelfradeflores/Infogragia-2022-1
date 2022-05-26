@@ -1,15 +1,15 @@
 local composer = require( "composer" )
-local objeto_score = require "score"
+ 
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
--- cw = display.contentWidth
--- ch = display.contentHeight
+cw = display.contentWidth
+ch = display.contentHeight
 
-local grupo_background, grupo_intermedio, grupo_delantero, puntaje
+local grupo_background, grupo_intermedio, grupo_delantero
 grupos = {grupo_background, grupo_intermedio, grupo_delantero}
 local puntos = 0
  
@@ -49,7 +49,6 @@ end
  
 function atras(e)
     if e.phase == "ended" then
-    	objeto_score.describir()
         composer.gotoScene( "menu", "slideRight", 2000 )
 
     end
@@ -70,12 +69,6 @@ function scene:create( event )
 	grupo_intermedio = display.newGroup( )
 	grupo_delantero = display.newGroup()
 
-
-	print("Paramaetros: ", event.params)
-	for k,v in pairs(event.params) do
-		print( k,v )
-	end
-
 	sceneGroup:insert( grupo_intermedio)
 	sceneGroup:insert( 1, grupo_background )
 	sceneGroup:insert( grupo_delantero )
@@ -89,10 +82,8 @@ function scene:create( event )
 	fondo:addEventListener( "touch", atras )
 
 
-	-- puntaje = display.newText(  grupo_delantero,  "SCORE: " .. puntos, 70,50, "arial", 30)
-	-- puntaje.anchorY = 0; puntaje.anchorX =0.5
-
-	puntaje = objeto_score.crear_score(70, 50)
+	puntaje = display.newText(  grupo_delantero,  "SCORE: " .. puntos, 70,50, "arial", 30)
+	puntaje.anchorY = 0; puntaje.anchorX =0.5
 
 	grupo_background:insert( fondo )
 
@@ -106,19 +97,13 @@ function scene:show( event )
  
     local sceneGroup = self.view
     local phase = event.phase
-
-
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
  
-        -- puntaje.text = "SCORE: 0"
-
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
-            local cantidad_de_manzanas_del_nivel = event.params.cantidad_de_manzanas
-    		print("cantidad_de_manzanas_del_nivel ", cantidad_de_manzanas_del_nivel)
- 		crearManzanas(cantidad_de_manzanas_del_nivel, 50,50)
+ 		crearManzanas(20, 50,50)
     end
 end
  
@@ -150,7 +135,7 @@ function scene:destroy( event )
  
     local sceneGroup = self.view
     -- Code here runs prior to the removal of scene's view
- 		objeto_score=nil
+ 
 end
  
  
