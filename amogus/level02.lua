@@ -15,8 +15,11 @@ end
 
 local function toggleShield(self, event)
 	if event.phase == "began" then
-		self:setFillColor(1,1,1)
-        activatedCounted = activatedCounted -1
+        if self.activated == true then
+            self:setFillColor(1,1,1)
+            self.activated = false
+            activatedCounted = activatedCounted -1
+        end
         if activatedCounted == 0 then
             taskCompletedText.isVisible = true
         end
@@ -28,6 +31,7 @@ local function activated(shield)
     res = math.random(1,2)
     if res == 1 and activatedCounted <=4 then   
         activatedCounted = activatedCounted +1
+        shield.activated = true
         shield:setFillColor(1,0,0)
     end
 end
@@ -41,8 +45,7 @@ local function createShieldHex()
     local widthOffset = 10
     activatedCounted = 0
 
-    while activatedCounted < 2 do
-        activatedCounted = 0
+    while activatedCounted == 0 do
 
         for i = grupo_intermedio.numChildren, 1, -1 do
 			grupo_intermedio[i]:removeSelf()
