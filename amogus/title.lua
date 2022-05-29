@@ -1,60 +1,69 @@
------------------------------------------------------------------------------------------
---
--- title.lua
---
------------------------------------------------------------------------------------------
-
 local composer = require("composer")
 local scene = composer.newScene()
 
---------------------------------------------
 
--- forward declaration
-local level1Text
-local level2Text
-local level3Text
+-- Local variables
+local level01Text, level02Text, level03Text, level04Text, level05Text, level06Text
 
--- Touch listener function for background object
-local function onBackgroundTouch(self, event)
+-- Functions
+local function onTextTouch(self, event)
+	local text = self.text
+
 	if event.phase == "ended" or event.phase == "cancelled" then
-		-- go to page1.lua scene
-		composer.gotoScene("juego", "slideLeft", 800)
-
-		return true -- indicates successful touch
+		if text == "LEVEL 1" then
+			composer.gotoScene("level01", "slideLeft", 500)
+		end
+		--if text == "LEVEL 2" then
+		--composer.gotoScene("level02", "slideLeft", 500)
+		--end
+		--if text == "LEVEL 3" then
+		--composer.gotoScene("level03", "slideLeft", 500)
+		--end
+		--if text == "LEVEL 4" then
+		--composer.gotoScene("level04", "slideLeft", 500)
+		--end
+		--if text == "LEVEL 5" then
+		--composer.gotoScene("level05", "slideLeft", 500)
+		--end
+		--if text == "LEVEL 6" then
+		--composer.gotoScene("level06", "slideLeft", 500)
+		--end
+		return true
 	end
 end
 
 local function createText(text, x, y, size)
-	text = display.newText(text, x, y, "arial", size)
+	text = display.newText(text, x, y, "candara", size)
 	text.anchorX = 0;
 	text.anchorY = 0
 	return text
 end
 
+-- Scene management
 function scene:create(event)
 	local sceneGroup = self.view
 
-	-- Called when the scene's view does not exist.
-	--
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
+	-- Display backgroud image
+	local background = display.newImageRect(sceneGroup, "images/title-screen/title-screen.jpg", cw, ch)
+	background.anchorX = 0
+	background.anchorY = 0
+	background.x, background.y = 0, 0
 
-	-- display a background image
-	--local background = display.newImageRect( sceneGroup, "images/mathias/cover.jpg", display.contentWidth, display.contentHeight )
-	--background.anchorX = 0
-	--background.anchorY = 0
-	--background.x, background.y = 0, 0
+	-- Add text levels
+	level01Text = createText("LEVEL 1", cw * 0.23, ch * 0.4, 50)
+	level02Text = createText("LEVEL 2", cw * 0.23, ch * 0.5, 50)
+	level03Text = createText("LEVEL 3", cw * 0.23, ch * 0.6, 50)
+	level04Text = createText("LEVEL 4", cw * 0.6, ch * 0.4, 50)
+	level05Text = createText("LEVEL 5", cw * 0.6, ch * 0.5, 50)
+	level06Text = createText("LEVEL 6", cw * 0.6, ch * 0.6, 50)
 
-	-- Add more text
-	level1Text = createText("LEVEL 1", cw * 0.5, ch * 0.5, 50)
-	level2Text = createText("LEVEL 2", cw * 0.5, ch * 0.6, 50)
-	level3Text = createText("LEVEL 3", cw * 0.5, ch * 0.7, 50)
-
-	-- all display objects must be inserted into group
-	--sceneGroup:insert( background )
-	sceneGroup:insert(level1Text)
-	sceneGroup:insert(level2Text)
-	sceneGroup:insert(level3Text)
+	-- insert text to sceneGroup
+	sceneGroup:insert(level01Text)
+	sceneGroup:insert(level02Text)
+	sceneGroup:insert(level03Text)
+	sceneGroup:insert(level04Text)
+	sceneGroup:insert(level05Text)
+	sceneGroup:insert(level06Text)
 end
 
 function scene:show(event)
@@ -64,14 +73,20 @@ function scene:show(event)
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		-- Called when the scene is now on screen
-		--
-		-- INSERT code here to make the scene come alive
-		-- e.g. start timers, begin animation, play audio, etc.
-
-		level1Text.touch = onBackgroundTouch
-		level1Text:addEventListener("touch", level1Text)
+		level01Text.touch = onTextTouch
+		level01Text:addEventListener("touch", level01Text)
+		level02Text.touch = onTextTouch
+		level02Text:addEventListener("touch", level02Text)
+		level03Text.touch = onTextTouch
+		level03Text:addEventListener("touch", level03Text)
+		level04Text.touch = onTextTouch
+		level04Text:addEventListener("touch", level04Text)
+		level05Text.touch = onTextTouch
+		level05Text:addEventListener("touch", level05Text)
+		level06Text.touch = onTextTouch
+		level06Text:addEventListener("touch", level06Text)
 	end
+
 end
 
 function scene:hide(event)
@@ -83,9 +98,6 @@ function scene:hide(event)
 		--
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
-
-		-- remove event listener from background
-		level1Text:removeEventListener("touch", background)
 
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
@@ -112,4 +124,3 @@ scene:addEventListener("destroy", scene)
 -----------------------------------------------------------------------------------------
 
 return scene
-
