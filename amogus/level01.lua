@@ -5,9 +5,9 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local grupo_background, grupo_intermedio, grupo_delantero, atrasText, scoreText, startText, aim
+local grupo_background, grupo_intermedio, grupo_delantero, atrasText, scoreText, startText
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
-local puntos = 0
+local puntos
 
 local manzanas = {}
 local cantidad_de_manzanas = 10
@@ -15,18 +15,6 @@ local cantidad_de_manzanas = 10
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
 	return text
-end
-
-function followAim(event)
-	if (event.phase == "began") then
-
-	elseif (event.phase == "moved") then
-		--aim.isVisible = true
-		aim.x = event.x
-		aim.y = event.y
-	elseif (event.phase == "ended") then
-
-	end
 end
 
 function destruirManzana(self, event)
@@ -87,14 +75,9 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	fondo = display.newImageRect("images/mathias/1.jpg", cw * 0.5, ch * 0.8)
+	fondo = display.newImageRect("images/mathias/1.jpg", cw * 0.6, ch * 0.75)
 	fondo.x = cw / 2;
 	fondo.y = ch / 2
-
-	--aim = display.newImageRect("images/mathias/aim.png", 70, 70)
-	--aim.x = cw/2; aim.y = ch/2
-	--aim:addEventListener( "touch", followAim)
-	--aim.isVisible = false
 
 	atrasText = createText("ATRAS", 0, 0, 50)
 	atrasText:addEventListener("touch", atras)
@@ -141,6 +124,7 @@ function scene:hide(event)
 	if (phase == "will") then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
 		atrasText.isVisible = false
+		startText.isVisible = false
 
 		scoreText.isVisible = false
 		scoreText.text = "Destroyed: 0"
