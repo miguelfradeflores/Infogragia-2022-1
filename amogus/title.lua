@@ -24,9 +24,9 @@ local function onTextTouch(self, event)
         if text == "LEVEL 5" then
             composer.gotoScene("level05", "slideLeft", 500)
         end
-        -- if text == "LEVEL 6" then
-        -- composer.gotoScene("level06", "slideLeft", 500)
-        -- end
+        if text == "LEVEL 6" then
+            composer.gotoScene("level06", "slideLeft", 500)
+        end
         return true
     end
 end
