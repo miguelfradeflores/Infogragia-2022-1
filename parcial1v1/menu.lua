@@ -94,7 +94,6 @@ function scene:create( event )
     sceneGroup:insert( grupo_delantero )
 
 
-	-- fondo = display.newImageRect(sceneGroup, "images/mountainsv2.jpg", cw, ch)
     fondo = display.newRect( 0,0,cw, ch)  
     fondo.xScale = 1.2
     fondo.yScale = 1.2
@@ -111,7 +110,11 @@ function scene:create( event )
    
 	grupo_background:insert( fondo )
 
+    -- fondo = display.newImageRect("images/fondo.jpg",0+ cw*2/25,0 + ch*2/25,cw - (cw*4/25), ch-(ch*4/25),50)  
     fondo = display.newRoundedRect(0+ cw*2/25,0 + ch*2/25,cw - (cw*4/25), ch-(ch*4/25),50)  
+    fondo.fill = {  type = "image",  filename = "images/fondo.jpg" }
+    -- fondo.x = 
+    -- fondo.y = 
 	fondo.anchorX = 0
 	fondo.anchorY = 0
     fondo:setFillColor( unpack(white))

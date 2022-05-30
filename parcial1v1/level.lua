@@ -17,8 +17,6 @@ ch = display.contentHeight
 black = {0,0,0}
 white = {1,1,1}
 silver = {192/255,192/255,192/255}
-coral = {255/255,127/255,80/255}
-metallicGold = {212/255,175/255,55/255}
 
 
 gray = {153/255, 153/255, 153/255}
@@ -79,7 +77,7 @@ local selectedLetters ={}
 local awx = 0
 local ahc = 0
 
-
+local winner
 --WORD GENERAL FUNCTIONS
 
 function checkWord(word) 
@@ -146,26 +144,18 @@ function getLetters( arreglo)
 end
 
 function getArregloLetras(cadena)
-    --ejem alma return {{a,2}{l,1}{m,1}}
-    -- {a,2,l,1,m,1}
+    
     local arrayAux = {}
-   
     for index, value in ipairs(cadena) do
         local c = value;
-        -- print("char :",c)
         local indexes = getIndex(arrayAux,c);
-        -- print("Indexes:", unpack(indexes))
         if (next(indexes) == nil) then
             table.insert(arrayAux , c);
             table.insert(arrayAux , 1);
         else
-            -- print("en arreglo aux")
             arrayAux[indexes[1]+1] = arrayAux[indexes[1]+1] +1
         end
     end
-
-
-    -- print(unpack(arrayAux))
     return arrayAux
 
 end
@@ -182,12 +172,9 @@ function getIndex(str, elem)
     return aux
 end
 
-
-
 --SQUARE FUNCTIONS
 function createSquare(x,y, awc, ahc, indice ,word, letter)
-
-   
+ 
     local posx = awc*x
     local  posy = ahc*y
     
@@ -199,7 +186,6 @@ function createSquare(x,y, awc, ahc, indice ,word, letter)
     squares[indice].word = {word}
     squares[indice].anchorX = 0; squares[indice].anchorY=0;
     
-   
 
 end
 
@@ -217,7 +203,7 @@ function getGridDimensions(arrrayWords)
         end
         x = math.max(unpack(xtable))
 
-        -- Get max y
+        
         ytable = {}
         for index, value in ipairs(arrrayWords) do
             auxVal = (value[3] + value[5])-1 
@@ -232,21 +218,15 @@ end
 
 function createGrid(largo)
     gridD = getGridDimensions(arregloPalabras);
-
     print("Dimension x:", gridD[1] , " Y:", gridD[2])
     awc = cw/gridD[1];
     ahc = (ch/2)/gridD[2];
-
     indice = 1;
-
     for i=1, #arregloPalabras do
         -- 1 nombre,2 x, 3 y, 4 lx , 5 ly
-       
         --vertical
         word = arregloPalabras[i][1]
-       
         if arregloPalabras[i][4] == 1 then
-            
             for j = 0 , arregloPalabras[i][5]-1 do
 
                 posx = arregloPalabras[i][2]
@@ -255,8 +235,7 @@ function createGrid(largo)
                 createSquare(posx,posy,awc,ahc,indice, word, string.sub(word,j+1,j+1));
                 indice = indice +1
             end
-        else 
-           
+        else           
             for k = 0 , arregloPalabras[i][4]-1 do
                 posx = arregloPalabras[i][2] + k
                 posy = arregloPalabras[i][3] 
@@ -264,29 +243,21 @@ function createGrid(largo)
                 createSquare(posx,posy,awc,ahc,indice, word, string.sub(word,k+1,k+1));
                 indice = indice +1
             end
-        end
-        
-        
+        end 
     end
-    
-
-
 end
-
 
 function revealWord(word)
 
     print("WORD:",word)
     for index, value in ipairs(squares) do
-       
-        -- print(unpack(value.word))
         aux = getIndex(value.word , word)
         if (next(aux) ~= nil) then
             --Cambiar de color
             value:setFillColor(unpack(blue))
             value:toFront()
             --Agregar las letras
-            createLetterObject( value.letter, value.x + (awc/2) ,value.y + (ahc/2), 70,grupoCrucigrama)
+            createLetterObject( value.letter, value.x + (awc/2) ,value.y + (ahc/2), ahc/2,grupoCrucigrama)
 
         end
     end
@@ -303,17 +274,11 @@ function createBigCircle(largo)
     bigControl.strokeWidth  =10 
     createArrayCircles(bigControl.x, bigControl.y , bigRadio , arregloLetras)
    
-    -- grupoRedondo:insert(bigControl)
-
-
-    
 end
 function createArrayCircles(bx,by,br,letterArray)
     numCirculos = #letterArray
-    
     print("sent mini:", bx,by, br);
     radio = calculoMiniRadio(numCirculos,br);
-    
     division = math.pi*2 / numCirculos;
     hipotenusa = br - radio
 
@@ -361,7 +326,6 @@ end
 --SELECTION CIRCLE
 function resetLines()
 
-    -- print("HACIENDO RESET")
     indicefijo = 0
     display.remove(choosingLine)
     startedChoosing = false
@@ -376,13 +340,11 @@ function resetLines()
     display.remove(wordBox);
     optionsArmado.text = ""
 
-
 end
 
 function selectMiniCircle(self, event)
     if event.phase == "began" then
         print("touched MINI redondo")
-        -- print("cantidad circulos",#circles)
         cordinatesLine = {}
         table.insert(cordinatesLine, self.x)
         table.insert(cordinatesLine, self.y)
@@ -391,9 +353,8 @@ function selectMiniCircle(self, event)
         table.insert(selectedLetters,self.letter)
         self:setFillColor(unpack(blue))
         self.selected = true
-        createChangingLetter(self.letter , cw/2 , ch*17/35 ,70 , grupo_intermedio)
+        createChangingLetter(self.letter , cw/2 , ch*17/35 ,100 , grupo_intermedio)
         
-
     elseif event.phase == "moved" then
         -- print("moving MINI redondo")
         if (startedChoosing == true and self.selected == false) then
@@ -404,7 +365,7 @@ function selectMiniCircle(self, event)
             indicefijo = indicefijo +2 
             self:setFillColor(unpack(blue))
     
-            createChangingLetter(self.letter , cw/2 , ch*17/35 , 70 , grupo_intermedio)
+            createChangingLetter(self.letter , cw/2 , ch*17/35 , 100 , grupo_intermedio)
         end
         
     elseif event.phase == "ended" then
@@ -474,22 +435,6 @@ function selectOutside(event)
     end
 end
 
-
-
-
-function pauseGame(e)
-    if e.phase == "began" then
-
-        
-    
-    elseif e.phase == "ended" then
-        overlayOptions.params.winner = false
-        composer.showOverlay("overlay-window",overlayOptions)
-
-    end
-    return
-end
-
 --CHOOSING
 function actionWWord(selectedLetters)
     local word = ""
@@ -500,13 +445,18 @@ function actionWWord(selectedLetters)
     if wasWord then
         changeColor(green)
         revealWord(word)
-
         winner = checkWin()
         if winner then
             overlayOptions.params.winner = true
+
+            fondo:removeEventListener( "touch", selectOutside )
+            grupoRedondo:removeEventListener( "touch", selectBigCircle )
+            for index, value in ipairs(circles) do
+                value:removeEventListener("touch",value)
+            end
+
             composer.showOverlay("overlay-window",overlayOptions);
         end
-
     else 
         changeColor(red)
     end
@@ -520,7 +470,7 @@ function changeColor(color)
 
 
     
-        if choosingLine ~= nil and #cordinatesLine > 0 then
+        if choosingLine ~= nil and #cordinatesLine > 0  then
             choosingLine:setStrokeColor(unpack(color))
             wordBox:setFillColor(unpack(color))
             for index, value in ipairs(circles) do
@@ -568,7 +518,19 @@ function createChangingLetter(text,x,y,fs,grupo)
     grupo:insert(myText)
 end
 
+--Pause listener
+function pauseGame(e)
+    if e.phase == "began" then
 
+        
+    
+    elseif e.phase == "ended" then
+        overlayOptions.params.winner = false
+        composer.showOverlay("overlay-window",overlayOptions)
+
+    end
+    return
+end
 
 
 
@@ -591,8 +553,10 @@ function scene:show( event )
         print("===========SCENE SHOW DID")
             local sceneGroup = self.view
 
+        
         arregloPalabras = event.params.arregloPalabras
 
+       
         grupo_background = display.newGroup( )
         grupo_intermedio = display.newGroup( )
         grupo_delantero = display.newGroup( )
@@ -609,10 +573,8 @@ function scene:show( event )
         grupo_intermedio:insert(grupoCrucigrama)
         grupo_delantero:insert(grupoRedondo)
     
-        fondo = display.newRect(grupo_background,0,0, cw, ch)
-            
-        fondo.xScale = 1.2
-        fondo.yScale = 1.2
+        
+        fondo = display.newImageRect(grupo_background,"images/fondo.jpg" , cw, ch) 
       
         fondo.anchorX = 0
         fondo.anchorY = 0
@@ -634,6 +596,11 @@ function scene:show( event )
         circles = {}
         squares = {}
          --Lines
+        winner = false
+        for index, value in ipairs(arregloPalabras) do
+            value[6]=0
+        end
+        overlayOptions.params.winner = false
         startedChoosing = false
         cordinatesLine = {}
         indicefijo = 0 

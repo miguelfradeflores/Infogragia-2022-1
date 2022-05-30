@@ -145,14 +145,14 @@ function scene:show( event )
             grupo_background:insert(text)
 
 
-            volver = display.newRoundedRect(grupo_delantero, cw/2, optionsG.y + ch*3/7 ,cw/2, ch/8,50)  
+            
+        end
+        volver = display.newRoundedRect(grupo_delantero, cw/2, optionsG.y + ch*3/7 ,cw/2, ch/8,50)  
         volver:setFillColor( unpack(white))
         volver:addEventListener("touch",volverJuego)
 
-            textB3 = display.newText(grupo_delantero,"Volver",cw/2 ,optionsG.y + ch*3/7,"arial",70 )
-            textB3:setFillColor(unpack(black))
-        end
-
+        textB3 = display.newText(grupo_delantero,"Volver",cw/2 ,optionsG.y + ch*3/7,"arial",70 )
+        textB3:setFillColor(unpack(black))
         
         menu = display.newRoundedRect(grupo_delantero, cw/2, optionsG.y + ch/7 ,cw/2, ch/8,50)  
         menu:setFillColor( unpack(white))

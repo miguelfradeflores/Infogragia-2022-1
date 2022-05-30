@@ -59,8 +59,8 @@ end
 function irNivel(self,e)
     if e.phase == "ended" then
         local options = {
-            effect = "fade",
-            time = 200,
+            effect = "crossFade",
+            time = 500,
             params = {
                 arregloPalabras = granArregloPalabras[self.indice]
             }
@@ -105,9 +105,9 @@ function scene:create( event )
 
     print("CREATE OVERLAY")
 
-    fondo = display.newRect(grupo_background,0,0, cw, ch)  
-    fondo.xScale = 1.2
-    fondo.yScale = 1.2
+    fondo = display.newImageRect(grupo_background,"images/fondo.jpg" , cw, ch)
+    -- fondo.fill = {  type = "image",  filename = "images/fondo.jpg" }  
+    
 	fondo.anchorX = 0
 	fondo.anchorY = 0
     
