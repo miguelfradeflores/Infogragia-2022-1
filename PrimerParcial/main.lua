@@ -60,6 +60,7 @@ end
 
 --Creando la pantalla de inicio
 --Consiste en el nombre del juego y un boton para empezar a jugar
+
 function homeScreen()
 	local buttonStart = display.newRect(cw/2, ch/2, 120,50,10)
 	buttonStart:setFillColor(250/255,138/255,26/255)
@@ -258,7 +259,7 @@ function thirdLevel()
 	return true
 end
 
-function displayScore(shapesLeft)
+function winGame(shapesLeft)
 	--Esta funcion muestra el score despues de haber terminado el juego
 	--Despues de mostrar el score durante 2 segundos vuelve a la pantalla de inicio
 	if(shapesLeft==0) then
@@ -295,13 +296,12 @@ function cardEvent(event)
 			previousSelection = -1
 			previousName = -1
 			previousTarget = nil
-			score = score + 1
 			shapesLeft = shapesLeft - 2
-			local pauseT = timer.performWithDelay(500,
+			local pauseT = timer.performWithDelay(400,
 			function ()
 				event.target:removeSelf()
 				to_remove:removeSelf()
-				displayScore(shapesLeft)
+				winGame(shapesLeft)
 			end,1)
 
 		else 
@@ -318,7 +318,6 @@ function cardEvent(event)
 			previousSelection = clickedIndex
 			previousName = clickedName
 			previousTarget = event.target
-			retry = retry + 1
 		end
 
 	end
@@ -335,8 +334,6 @@ function drawCardsL3()
 	previousSelection = -1
 	previousTarget = nil
 	previousName = -1
-	retry = 0
-	score = 0
 	shapesLeft = 12
 
 	--Se dibujan los rectangulos y se le asignan imagenes de manera random
@@ -363,8 +360,6 @@ function drawCardsL2()
 	previousSelection = -1
 	previousTarget = nil
 	previousName = -1
-	retry = 0
-	score = 0
 	shapesLeft = 8
 
 	--Se dibujan los rectangulos y se le asignan imagenes de manera random
@@ -390,8 +385,6 @@ function drawCardsL1()
 	previousSelection = -1
 	previousTarget = nil
 	previousName = -1
-	retry = 0
-	score = 0
 	shapesLeft = 6
 
 	--Se dibujan los rectangulos y se le asignan imagenes randomicas
