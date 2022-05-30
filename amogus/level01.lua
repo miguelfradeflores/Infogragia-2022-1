@@ -5,9 +5,8 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local grupo_background, grupo_intermedio, grupo_delantero, atrasText, scoreText, startText
+local grupo_background, grupo_intermedio, grupo_delantero, backText, scoreText, startText, score, count
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
-local puntos
 
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
@@ -17,17 +16,18 @@ end
 function destoryMeteor(self, event)
 	local x,y
 	if event.phase == "ended" then
-		puntos = puntos + 1
-		scoreText.text = "Destroyed: " .. puntos
+		score = score + 1
+		scoreText.text = "Destroyed: " .. score
 		x = self.x
 		y = self.y
 		self:removeSelf()
-		explosion = display.newImageRect("images/mathias/weaponsExplosion.png", 70, 70)
+
+		explosion = display.newImageRect("images/mathias/level01/weaponsExplosion.png", 70, 70)
 		explosion.x = x
 		explosion.y = y
 		transition.fadeOut(explosion, { time = 1650,  })
 
-		if puntos == 10 then
+		if score == 10 then
 			taskCompletedText.isVisible = true
 			scoreText.isVisible = false
 		end
@@ -37,18 +37,21 @@ end
 
 local function hideMeteor(self)
 	self.isVisible = false
+	count = count + 1
+	if count == 10 then
+		backText.isVisible = true
+	end
 end
 
 local function createMeteor( i )
-	meteor = display.newImageRect("images/mathias/weaponsMeteor.png", 70, 70)
-	meteor.x = fondo.width * 1.25
-	meteor.y = math.random(ch / 2 - fondo.height / 2, ch / 2 + fondo.height / 2)
+	meteor = display.newImageRect("images/mathias/level01/weaponsMeteor.png", 70, 70)
+	meteor.x = background.width * 1.25
+	meteor.y = math.random(ch / 2 - background.height / 2, ch / 2 + background.height / 2)
 
 	meteor.touch = destoryMeteor
-	meteor:addEventListener("touch", meteor[i])
-	meteor.se_puede_matar = true
+	meteor:addEventListener("touch", meteor)
 
-	posx = (cw / 2 - fondo.width / 2)
+	posx = (cw / 2 - background.width / 2)
 	posy = math.random(0, ch)
 	grupo_intermedio:insert(meteor)
 	transition.to(meteor, { time = 1650, x = posx, y = posy, onComplete = hideMeteor })
@@ -57,7 +60,9 @@ end
 function createMeteors()
 	scoreText.isVisible = true
 	startText.isVisible = false
-	puntos = 0
+	backText.isVisible = false
+	score = 0
+	count = 0
 
 	timer.performWithDelay( 500, createMeteor, 10 )
 end
@@ -86,13 +91,13 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	fondo = display.newImageRect("images/mathias/weaponsScreen.png", cw * 0.6, ch * 0.75)
-	fondo.x = cw / 2;
-	fondo.y = ch / 2
+	background = display.newImageRect("images/mathias/level01/weaponsScreen.png", cw * 0.6, ch * 0.75)
+	background.x = cw / 2;
+	background.y = ch / 2
 
-	atrasText = createText("BACK", 0, 30, 50)
-	atrasText:addEventListener("touch", atras)
-	atrasText.isVisible = false
+	backText = createText("BACK", 0, 30, 50)
+	backText:addEventListener("touch", atras)
+	backText.isVisible = false
 
 	scoreText = createText("Destroyed: 0", cw / 2, ch*0.94, 80)
 	scoreText.isVisible = false
@@ -104,7 +109,7 @@ function scene:create(event)
 	taskCompletedText = createText("Task Completed!", cw / 2, ch*0.94, 80)
 	taskCompletedText.isVisible = false
 
-	grupo_background:insert(fondo)
+	grupo_background:insert(background)
 end
 
 function scene:show(event)
@@ -114,13 +119,9 @@ function scene:show(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-
-		-- scoreText.text = "SCORE: 0"
-
-
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
-		atrasText.isVisible = true
+		backText.isVisible = true
 		startText.isVisible = true
 	end
 end
@@ -132,10 +133,9 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-		atrasText.isVisible = false
+		backText.isVisible = false
 		startText.isVisible = false
 		taskCompletedText.isVisible = false
-
 		scoreText.isVisible = false
 		scoreText.text = "Destroyed: 0"
 

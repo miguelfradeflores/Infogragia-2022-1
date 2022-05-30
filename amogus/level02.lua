@@ -5,7 +5,7 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local grupo_background, grupo_intermedio, grupo_delantero, atrasText, startText, taskCompletedText, activatedCounted
+local grupo_background, grupo_intermedio, grupo_delantero, backText, startText, taskCompletedText, activatedCounted
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
 
 local function createText(text, x, y, size)
@@ -52,7 +52,7 @@ local function createShieldHex()
 			grupo_intermedio[i] = nil
 		end
         
-        centerShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        centerShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         centerShield.x = cw/2
         centerShield.y = ch/2
         activated(centerShield)
@@ -61,7 +61,7 @@ local function createShieldHex()
         grupo_intermedio:insert(centerShield)
         
 
-        upperShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        upperShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         upperShield.x = centerShield.x
         upperShield.y = centerShield.y-(height/2)*2-heightOffset
         activated(upperShield)
@@ -69,7 +69,7 @@ local function createShieldHex()
         upperShield:addEventListener("touch", upperShield)
         grupo_intermedio:insert(upperShield)
 
-        upperLeftShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        upperLeftShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         upperLeftShield.x = centerShield.x-(width/2)*2-widthOffset
         upperLeftShield.y = centerShield.y-(height/2) - heightOffset
         activated(upperLeftShield)
@@ -77,7 +77,7 @@ local function createShieldHex()
         upperLeftShield:addEventListener("touch", upperLeftShield)
         grupo_intermedio:insert(upperLeftShield)
 
-        upperRightShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        upperRightShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         upperRightShield.x = centerShield.x+(width/2)*2+widthOffset
         upperRightShield.y = centerShield.y-(height/2) - heightOffset
         activated(upperRightShield)
@@ -85,7 +85,7 @@ local function createShieldHex()
         upperRightShield:addEventListener("touch", upperRightShield)
         grupo_intermedio:insert(upperRightShield)
 
-        bottomShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        bottomShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         bottomShield.x = centerShield.x
         bottomShield.y = centerShield.y+(height/2)*2+heightOffset
         activated(bottomShield)
@@ -93,7 +93,7 @@ local function createShieldHex()
         bottomShield:addEventListener("touch", bottomShield)
         grupo_intermedio:insert(bottomShield)
 
-        bottomLeftShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        bottomLeftShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         bottomLeftShield.x = centerShield.x-(width/2)*2-widthOffset
         bottomLeftShield.y = centerShield.y+(height/2) + heightOffset
         activated(bottomLeftShield)
@@ -101,7 +101,7 @@ local function createShieldHex()
         bottomLeftShield:addEventListener("touch", bottomLeftShield)
         grupo_intermedio:insert(bottomLeftShield)
 
-        bottomRightShield = display.newImageRect("images/mathias/shieldsHexagon.png", width, height)
+        bottomRightShield = display.newImageRect("images/mathias/level02/shieldsHexagon.png", width, height)
         bottomRightShield.x = centerShield.x+(width/2)*2+widthOffset
         bottomRightShield.y = centerShield.y+(height/2) + heightOffset
         activated(bottomRightShield)
@@ -137,17 +137,17 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	shieldsBackground = display.newImageRect("images/mathias/shieldsBackground.png", cw * 0.7, ch * 0.85)
+	shieldsBackground = display.newImageRect("images/mathias/level02/shieldsBackground.png", cw * 0.7, ch * 0.85)
 	shieldsBackground.x = cw / 2;
 	shieldsBackground.y = ch / 2
 
-    shieldsArea = display.newImageRect("images/mathias/shieldsArea.png", cw * 0.65, ch * 0.8)
+    shieldsArea = display.newImageRect("images/mathias/level02/shieldsArea.png", cw * 0.65, ch * 0.8)
     shieldsArea.x = cw / 2
     shieldsArea.y = ch / 2
 
-	atrasText = createText("BACK", 0, 30, 50)
-	atrasText:addEventListener("touch", atras)
-	atrasText.isVisible = false
+	backText = createText("BACK", 0, 30, 50)
+	backText:addEventListener("touch", atras)
+	backText.isVisible = false
 
 	startText = createText("START", cw / 2, ch / 2, 50)
 	startText:addEventListener("touch", createShieldHex)
@@ -170,7 +170,7 @@ function scene:show(event)
         
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
-		atrasText.isVisible = true
+		backText.isVisible = true
 		startText.isVisible = true
 	end
 end
@@ -182,7 +182,7 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-		atrasText.isVisible = false
+		backText.isVisible = false
 		startText.isVisible = false
         taskCompletedText.isVisible = false
 

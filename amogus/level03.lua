@@ -5,7 +5,7 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local grupo_background, grupo_intermedio, grupo_delantero, atrasText, startText, taskCompletedText, activatedCounted, count
+local grupo_background, grupo_intermedio, grupo_delantero, backText, startText, taskCompletedText, activatedCount
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
 local availableNumbers = {}
 
@@ -16,13 +16,12 @@ end
 
 local function toggleShield(self, event)
 	if event.phase == "began" then
-        print(activatedCounted, self.number)
-        if self.activated == false and self.number == activatedCounted+1 then
+        if self.activated == false and self.number == activatedCount+1 then
             self:setFillColor(0,1,0)
             self.activated = true
-            activatedCounted = activatedCounted + 1
+            activatedCount = activatedCount + 1
         end
-        if activatedCounted == 10 then
+        if activatedCount == 10 then
             taskCompletedText.isVisible = true
         end
 	end
@@ -33,7 +32,6 @@ local function randomNumber()
     continue = true
     while continue do
         n = math.random(1,10)
-        print(n)
         if n == availableNumbers[n] then
             availableNumbers[n] = 0
             continue = false
@@ -49,15 +47,15 @@ local function createNumberPad()
     local width = reactorScreen.width*1/5
     local x = reactorScreen.x-reactorScreen.width/2
     local y = reactorScreen.y-reactorScreen.height/2-10
-    activatedCounted = 0
-    count = 1
+    activatedCount = 0
+    
     for i=1, 10, 1 do
         availableNumbers[i] = i
     end
     
     for i=1, 5, 1 do
         n = randomNumber()
-		numberpad = display.newImageRect("images/mathias/reactor" .. n .. ".png", width, height)
+		numberpad = display.newImageRect("images/mathias/level03/reactor" .. n .. ".png", width, height)
         numberpad.anchorX = 0
         numberpad.anchorY = 0
         numberpad.x = x
@@ -69,13 +67,12 @@ local function createNumberPad()
         grupo_intermedio:insert(numberpad)
 
         x = x + width
-        count = count + 1
 	end	
 
     x = reactorScreen.x-reactorScreen.width/2
     for i=1, 5, 1 do
         n = randomNumber()
-		numberpad = display.newImageRect("images/mathias/reactor" .. n .. ".png", width, height)
+		numberpad = display.newImageRect("images/mathias/level03/reactor" .. n .. ".png", width, height)
         numberpad.anchorX = 0
         numberpad.anchorY = 0
         numberpad.x = x
@@ -87,7 +84,6 @@ local function createNumberPad()
         grupo_intermedio:insert(numberpad)
 
         x = x + width
-        count = count + 1
 	end
     return true
 end
@@ -116,17 +112,17 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	reactorBackground = display.newImageRect("images/mathias/reactorBackground.png", cw, ch * 0.7)
+	reactorBackground = display.newImageRect("images/mathias/level03/reactorBackground.png", cw, ch * 0.7)
 	reactorBackground.x = cw / 2;
 	reactorBackground.y = ch / 2
 
-    reactorScreen = display.newImageRect("images/mathias/reactorScreen.png", reactorBackground.width*6.7/8, reactorBackground.height*5.5/8)
+    reactorScreen = display.newImageRect("images/mathias/level03/reactorScreen.png", reactorBackground.width*6.7/8, reactorBackground.height*5.5/8)
     reactorScreen.x = cw / 2
     reactorScreen.y = ch / 2+5
 
-	atrasText = createText("BACK", 0, 30, 50)
-	atrasText:addEventListener("touch", atras)
-	atrasText.isVisible = false
+	backText = createText("BACK", 0, 30, 50)
+	backText:addEventListener("touch", atras)
+	backText.isVisible = false
 
 	startText = createText("START", cw / 2, ch / 2, 50)
 	startText:addEventListener("touch", createNumberPad)
@@ -149,7 +145,7 @@ function scene:show(event)
         
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
-		atrasText.isVisible = true
+		backText.isVisible = true
 		startText.isVisible = true
 	end
 end
@@ -161,7 +157,7 @@ function scene:hide(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is on screen (but is about to go off screen)
-		atrasText.isVisible = false
+		backText.isVisible = false
 		startText.isVisible = false
         taskCompletedText.isVisible = false
 
