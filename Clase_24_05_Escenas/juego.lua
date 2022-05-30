@@ -18,7 +18,7 @@ local manzanas = {}
 
 function destruirManzana(self, event)
 
-	if event.phase == "ended" then
+	if event.s == "ended" then
 		-- desaparecer objeto
 		--aumentar marcador 
 		if self.se_puede_matar then
@@ -74,10 +74,7 @@ function scene:create( event )
 	sceneGroup:insert( grupo_delantero )
 
 	fondo = display.newImageRect("1.jpg", cw, ch)
-	fondo.x = 0;
-	fondo.y = 0
-	fondo.anchorX = 0
-	fondo.anchorY = 0
+
 
 	fondo:addEventListener( "touch", atras )
 

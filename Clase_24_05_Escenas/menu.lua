@@ -31,7 +31,7 @@ function scene:create( event )
     fondo:setFillColor( 0.42 )
     fondo:addEventListener( "touch", jugar )
 
-            manzana = display.newImage(sceneGroup, "f1.png", math.random( 0,cw ), math.random(0,ch) )
+    manzana = display.newImage(sceneGroup, "f1.png", math.random( 0,cw ), math.random(0,ch) )
 end
  
  
