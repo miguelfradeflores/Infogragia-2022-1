@@ -64,7 +64,7 @@ end
 
 function atras(e)
 	if e.phase == "ended" then
-		composer.gotoScene("title", "slideRight", 2000)
+		composer.gotoScene("title", "crossFade", 500)
 	end
 	return
 end

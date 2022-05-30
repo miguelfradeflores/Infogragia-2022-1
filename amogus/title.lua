@@ -11,13 +11,13 @@ local function onTextTouch(self, event)
 
 	if event.phase == "ended" or event.phase == "cancelled" then
 		if text == "LEVEL 1" then
-			composer.gotoScene("level01", "slideLeft", 500)
+			composer.gotoScene("level01", "crossFade", 500)
 		end
 		if text == "LEVEL 2" then
-		composer.gotoScene("level02", "slideLeft", 500)
+		composer.gotoScene("level02", "crossFade", 500)
 		end
 		if text == "LEVEL 3" then
-		composer.gotoScene("level03", "slideLeft", 500)
+		composer.gotoScene("level03", "crossFade", 500)
 		end
 		if text == "LEVEL 4" then
 			composer.gotoScene("level04", "slideLeft", 500)
