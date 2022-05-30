@@ -5,61 +5,91 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local grupo_background, grupo_intermedio, grupo_delantero, atrasText, scoreText, startText
+local grupo_background, grupo_intermedio, grupo_delantero, atrasText, startText, taskCompletedText, activatedCounted, count
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
-local puntos
+local availableNumbers = {}
 
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
 	return text
 end
 
-function destoryMeteor(self, event)
-	local x,y
-	if event.phase == "ended" then
-		puntos = puntos + 1
-		scoreText.text = "Destroyed: " .. puntos
-		x = self.x
-		y = self.y
-		self:removeSelf()
-		explosion = display.newImageRect("images/mathias/weaponsExplosion.png", 70, 70)
-		explosion.x = x
-		explosion.y = y
-		transition.fadeOut(explosion, { time = 1650,  })
-
-		if puntos == 10 then
-			taskCompletedText.isVisible = true
-			scoreText.isVisible = false
-		end
+local function toggleShield(self, event)
+	if event.phase == "began" then
+        print(activatedCounted, self.number)
+        if self.activated == false and self.number == activatedCounted+1 then
+            self:setFillColor(0,1,0)
+            self.activated = true
+            activatedCounted = activatedCounted + 1
+        end
+        if activatedCounted == 10 then
+            taskCompletedText.isVisible = true
+        end
 	end
 	return true
 end
 
-local function hideMeteor(self)
-	self.isVisible = false
+local function randomNumber()
+    continue = true
+    while continue do
+        n = math.random(1,10)
+        print(n)
+        if n == availableNumbers[n] then
+            availableNumbers[n] = 0
+            continue = false
+        end
+    end
+    return n
 end
 
-local function createMeteor( i )
-	meteor = display.newImageRect("images/mathias/weaponsMeteor.png", 70, 70)
-	meteor.x = fondo.width * 1.25
-	meteor.y = math.random(ch / 2 - fondo.height / 2, ch / 2 + fondo.height / 2)
+local function createNumberPad()
+    startText.isVisible = false
 
-	meteor.touch = destoryMeteor
-	meteor:addEventListener("touch", meteor[i])
-	meteor.se_puede_matar = true
+    local height = reactorScreen.height*1/2
+    local width = reactorScreen.width*1/5
+    local x = reactorScreen.x-reactorScreen.width/2
+    local y = reactorScreen.y-reactorScreen.height/2-10
+    activatedCounted = 0
+    count = 1
+    for i=1, 10, 1 do
+        availableNumbers[i] = i
+    end
+    
+    for i=1, 5, 1 do
+        n = randomNumber()
+		numberpad = display.newImageRect("images/mathias/reactor" .. n .. ".png", width, height)
+        numberpad.anchorX = 0
+        numberpad.anchorY = 0
+        numberpad.x = x
+        numberpad.y = y
+        numberpad.activated = false
+        numberpad.number = n
+        numberpad.touch = toggleShield
+        numberpad:addEventListener("touch", numberpad)
+        grupo_intermedio:insert(numberpad)
 
-	posx = (cw / 2 - fondo.width / 2)
-	posy = math.random(0, ch)
-	grupo_intermedio:insert(meteor)
-	transition.to(meteor, { time = 1650, x = posx, y = posy, onComplete = hideMeteor })
-end
+        x = x + width
+        count = count + 1
+	end	
 
-function createMeteors()
-	scoreText.isVisible = true
-	startText.isVisible = false
-	puntos = 0
+    x = reactorScreen.x-reactorScreen.width/2
+    for i=1, 5, 1 do
+        n = randomNumber()
+		numberpad = display.newImageRect("images/mathias/reactor" .. n .. ".png", width, height)
+        numberpad.anchorX = 0
+        numberpad.anchorY = 0
+        numberpad.x = x
+        numberpad.y = y*2
+        numberpad.activated = false
+        numberpad.number = n
+        numberpad.touch = toggleShield
+        numberpad:addEventListener("touch", numberpad)
+        grupo_intermedio:insert(numberpad)
 
-	timer.performWithDelay( 500, createMeteor, 10 )
+        x = x + width
+        count = count + 1
+	end
+    return true
 end
 
 function atras(e)
@@ -86,25 +116,27 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	fondo = display.newImageRect("images/mathias/weaponsScreen.png", cw * 0.6, ch * 0.75)
-	fondo.x = cw / 2;
-	fondo.y = ch / 2
+	reactorBackground = display.newImageRect("images/mathias/reactorBackground.png", cw, ch * 0.7)
+	reactorBackground.x = cw / 2;
+	reactorBackground.y = ch / 2
+
+    reactorScreen = display.newImageRect("images/mathias/reactorScreen.png", reactorBackground.width*6.7/8, reactorBackground.height*5.5/8)
+    reactorScreen.x = cw / 2
+    reactorScreen.y = ch / 2+5
 
 	atrasText = createText("BACK", 0, 30, 50)
 	atrasText:addEventListener("touch", atras)
 	atrasText.isVisible = false
 
-	scoreText = createText("Destroyed: 0", cw / 2, ch*0.94, 80)
-	scoreText.isVisible = false
-
 	startText = createText("START", cw / 2, ch / 2, 50)
-	startText:addEventListener("touch", createMeteors)
+	startText:addEventListener("touch", createNumberPad)
 	startText.isVisible = false
 
-	taskCompletedText = createText("Task Completed!", cw / 2, ch*0.94, 80)
+    taskCompletedText = createText("Task Completed!", cw / 2, ch*0.94, 80)
 	taskCompletedText.isVisible = false
 
-	grupo_background:insert(fondo)
+	grupo_background:insert(reactorBackground)
+    grupo_delantero:insert(reactorScreen)
 end
 
 function scene:show(event)
@@ -114,10 +146,7 @@ function scene:show(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-
-		-- scoreText.text = "SCORE: 0"
-
-
+        
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
 		atrasText.isVisible = true
@@ -134,10 +163,7 @@ function scene:hide(event)
 		-- Code here runs when the scene is on screen (but is about to go off screen)
 		atrasText.isVisible = false
 		startText.isVisible = false
-		taskCompletedText.isVisible = false
-
-		scoreText.isVisible = false
-		scoreText.text = "Destroyed: 0"
+        taskCompletedText.isVisible = false
 
 		for i = grupo_intermedio.numChildren, 1, -1 do
 			grupo_intermedio[i]:removeSelf()
@@ -165,4 +191,3 @@ scene:addEventListener("destroy", scene)
 -- -----------------------------------------------------------------------------------
 
 return scene
-
