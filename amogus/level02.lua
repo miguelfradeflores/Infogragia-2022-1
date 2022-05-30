@@ -7,6 +7,8 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local grupo_background, grupo_intermedio, grupo_delantero, backText, startText, taskCompletedText, activatedCounted
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
+local correctSound = audio.loadStream("sounds/level02/correct.mp3")
+local incorrectSound = audio.loadStream("sounds/level02/incorrect.mp3")
 
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
@@ -16,11 +18,15 @@ end
 local function toggleShield(self, event)
 	if event.phase == "began" then
         if self.activated == true then
+            audio.play(correctSound)
             self:setFillColor(1,1,1)
             self.activated = false
             activatedCounted = activatedCounted -1
+        else
+            audio.play(incorrectSound)
         end
         if activatedCounted == 0 then
+            audio.play(completedTaskSound)
             taskCompletedText.isVisible = true
         end
 	end
@@ -167,7 +173,7 @@ function scene:show(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
-        
+        audio.play(startTaskSound)
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
 		backText.isVisible = true
@@ -185,6 +191,7 @@ function scene:hide(event)
 		backText.isVisible = false
 		startText.isVisible = false
         taskCompletedText.isVisible = false
+        audio.play(closeTaskSound)
 
 		for i = grupo_intermedio.numChildren, 1, -1 do
 			grupo_intermedio[i]:removeSelf()

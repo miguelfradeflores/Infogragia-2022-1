@@ -3,6 +3,8 @@ local scene = composer.newScene()
 
 -- Local variables
 local level01Text, level02Text, level03Text, level04Text, level05Text, level06Text
+local ambienceSound = audio.loadStream("sounds/ambience.mp3")
+
 
 -- Functions
 local function onTextTouch(self, event)
@@ -70,7 +72,7 @@ function scene:show(event)
     local phase = event.phase
 
     if phase == "will" then
-        -- Called when the scene is still off screen and is about to move on screen
+		audio.play(ambienceSound, {loops = -1})
     elseif phase == "did" then
         level01Text.touch = onTextTouch
         level01Text:addEventListener("touch", level01Text)

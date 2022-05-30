@@ -7,15 +7,24 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local grupo_background, grupo_intermedio, grupo_delantero, backText, scoreText, startText, score, count
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
+local fireSound = audio.loadStream("sounds/level01/fire.mp3")
+local explosionSound = audio.loadStream("sounds/level01/explosion.mp3")
 
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
 	return text
 end
 
+local function playSound()
+	if startText.isVisible == false then
+		audio.play(fireSound)
+	end
+end
+
 function destoryMeteor(self, event)
 	local x,y
 	if event.phase == "ended" then
+		audio.play(explosionSound)
 		score = score + 1
 		scoreText.text = "Destroyed: " .. score
 		x = self.x
@@ -28,6 +37,7 @@ function destoryMeteor(self, event)
 		transition.fadeOut(explosion, { time = 1650,  })
 
 		if score == 10 then
+			audio.play(completedTaskSound)
 			taskCompletedText.isVisible = true
 			scoreText.isVisible = false
 		end
@@ -94,6 +104,7 @@ function scene:create(event)
 	background = display.newImageRect("images/mathias/level01/weaponsScreen.png", cw * 0.6, ch * 0.75)
 	background.x = cw / 2;
 	background.y = ch / 2
+	background:addEventListener("touch", playSound)
 
 	backText = createText("BACK", 0, 30, 50)
 	backText:addEventListener("touch", atras)
@@ -119,6 +130,7 @@ function scene:show(event)
 
 	if (phase == "will") then
 		-- Code here runs when the scene is still off screen (but is about to come on screen)
+		audio.play(startTaskSound)
 	elseif (phase == "did") then
 		-- Code here runs when the scene is entirely on screen
 		backText.isVisible = true
@@ -138,6 +150,8 @@ function scene:hide(event)
 		taskCompletedText.isVisible = false
 		scoreText.isVisible = false
 		scoreText.text = "Destroyed: 0"
+
+		audio.play(closeTaskSound)
 
 		for i = grupo_intermedio.numChildren, 1, -1 do
 			grupo_intermedio[i]:removeSelf()
