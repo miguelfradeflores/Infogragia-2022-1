@@ -24,6 +24,7 @@ local textoNivelcompletado
 local manejadorTiempo 
 local puntajeMax=100
 local arma
+local explosion
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- ----------------------------------------------------------------------------------
@@ -84,14 +85,15 @@ function crearObjeto()
     dir1 = math.random(0,1)
     initX=0 ; intiY=0
     if dir1 == 1 then
-        initX = -300
+        initX = 0
     else
-        initX = 1400
+        initX = cw
     end
     
     if contadorBalasI ~= 0 and puntaje<puntajeMax then 
         circulo = display.newImageRect(grupo_intermedio,"globo.jpg",40,60)
         circulo.x = initX  ; circulo.y = ch/2
+        circulo.isVisible = false
         transition.to(circulo, { x=initX, y= math.random(50,600), time=100,onComplete=mover,tag = "objeto"})
         circulo.touch = destruirObjeto
         circulo:addEventListener("touch",circulo)
@@ -117,14 +119,23 @@ function mover()
             posY=600
         end 
     end
+    circulo.isVisible = true
+
     distancia = dist_puntos(circulo.x, circulo.y,posX, posY)
     time = (distancia*5 )/ velocidad
     transition.to(circulo, { x=posX, y=posY, time=time, transition=easing.inOutSine,onComplete=mover, tag = "objeto"  })
     return true
 end
-
+function destruirExplosion( )
+    -- body
+    explosion.isVisible = false
+end
 function destruirObjeto(self, event) 
     transition.cancel("objeto")
+    explosion.isVisible = true
+    explosion.x = event.x ; explosion.y = event.y
+    manejadorExplosion = timer.performWithDelay( 1000, destruirExplosion )
+
     self:removeSelf( )
     puntaje = puntaje +10
     textoPuntaje.text = "Puntaje: " .. puntaje
@@ -235,8 +246,9 @@ function scene:create( event )
     grupo_background = display.newGroup( )
     grupo_intermedio = display.newGroup( )
     grupo_delantero = display.newGroup()
-    
-
+    explosion = display.newImageRect(grupo_delantero,"explosion.png",50,50)
+    explosion.x =0 ; explosion.y=0
+    explosion.isVisible = false
     textoPuntaje = display.newText(grupo_delantero,"Puntaje: " .. puntaje, 100,50, "arial", 40) 
     textoTiempo = display.newText(grupo_delantero,"Tiempo: " .. tiempo, cw-400,50, "arial", 40)
     crearBalas( )
@@ -273,16 +285,10 @@ function scene:show( event )
         -- textoPuntaje = display.newText("Puntaje: " .. puntaje, 100,50, "arial", 40) 
         -- textoTiempo = display.newText("Tiempo: " .. tiempo, cw-400,50, "arial", 40) 
         manejadorTiempo = timer.performWithDelay( 1000, actualizarTiempo,33 )
-        puntajeMax = 20 * velocidad
+        puntajeMax = 50 * velocidad
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
         crearObjeto()
-        fondoD = display.newRect(grupo_delantero,-400,0,400,ch)
-        fondoD.anchorX = 0;  fondo.anchorY = 0
-        fondoD:setFillColor(0,0,0)
-        fondoI = display.newRect(grupo_delantero,-400,0,400,ch)
-        fondoI.anchorX = 0;  fondo.anchorY = 0
-        fondoI:setFillColor(0,0,0)
     end
 end
  
