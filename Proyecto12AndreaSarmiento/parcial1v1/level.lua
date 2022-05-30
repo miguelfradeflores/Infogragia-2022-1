@@ -423,6 +423,7 @@ function createLetterObject(text,x,y,fs,grupo)
     grupo:insert(myText)
 end
 
+
 --Word that is forming
 function createChangingLetter(text,x,y,fs,grupo)
     optionsArmado.text = optionsArmado.text..text
