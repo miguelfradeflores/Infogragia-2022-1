@@ -7,8 +7,6 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local grupo_background, grupo_intermedio, grupo_delantero, atrasText, startText, taskCompletedText, activatedCounted, count
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
-local numbers = {}
-
 local availableNumbers = {}
 
 local function createText(text, x, y, size)
@@ -91,8 +89,6 @@ local function createNumberPad()
         x = x + width
         count = count + 1
 	end
-    
-
     return true
 end
 
