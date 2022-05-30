@@ -58,7 +58,7 @@ local function onScanButtonTouch(self, event)
 
     transition.to(progressBar, { xScale = cw * 0.009, time = 4000 })
 
-    self:removeSelf()
+    self.isVisible = false
 end
 
 -- -----------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ function scene:create(event)
     backButton = createImageRectObject(sceneGroup, "images/back-button.png", cw * 0.15, ch * 0.1, cw * 0.845, ch * 0.1)
     backButton.isVisible = false
     bean = createImageRectObject(sceneGroup, "images/bean-right.png", cw * 0.2, ch * 0.2, cw * 0.55, ch * 0.67)
-    scanButton = createImageRectObject(sceneGroup, "images/boris/level04/level04-save-button.png", cw * 0.15, ch * 0.15, cw * 0.15, ch * 0.75)
+    scanButton = createImageRectObject(scanGroup, "images/boris/level04/level04-save-button.png", cw * 0.15, ch * 0.15, cw * 0.15, ch * 0.75)
 end
 
 -- show()
@@ -97,8 +97,6 @@ end
 -- -----------------------------------------------------------------------------------
 scene:addEventListener("create", scene)
 scene:addEventListener("show", scene)
-scene:addEventListener("hide", scene)
-scene:addEventListener("destroy", scene)
 -- -----------------------------------------------------------------------------------
 
 return scene
