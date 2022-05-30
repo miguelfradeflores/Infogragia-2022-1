@@ -25,6 +25,7 @@ local manejadorTiempo
 local puntajeMax=100
 local arma
 local explosion
+local mira
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- ----------------------------------------------------------------------------------
@@ -213,7 +214,11 @@ function crearMensajes( )
     bottonNext:addEventListener("touch",pasasarNivel)
 
 end
-
+----- mause 
+ function onMouseEvent( event )
+    -- Print the mouse cursor's current position to the log.
+    mira.x = event.x ; mira.y = event.y
+end
 
 -- Eventos  Juego
 function detenerJuego(  )
@@ -251,6 +256,9 @@ function scene:create( event )
     explosion.isVisible = false
     textoPuntaje = display.newText(grupo_delantero,"Puntaje: " .. puntaje, 100,50, "arial", 40) 
     textoTiempo = display.newText(grupo_delantero,"Tiempo: " .. tiempo, cw-400,50, "arial", 40)
+    
+    mira= display.newImageRect(grupo_delantero,"mira.png",50,50)
+    Runtime:addEventListener( "mouse", onMouseEvent )
     crearBalas( )
     arma =crearRecta( )
 
