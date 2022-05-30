@@ -9,46 +9,57 @@ local grupo_background, grupo_intermedio, grupo_delantero, atrasText, scoreText,
 grupos = { grupo_background, grupo_intermedio, grupo_delantero }
 local puntos
 
-local manzanas = {}
-local cantidad_de_manzanas = 10
-
 local function createText(text, x, y, size)
 	text = display.newText(text, x, y, "arial", size)
 	return text
 end
 
-function destruirManzana(self, event)
+function destoryMeteor(self, event)
+	local x,y
 	if event.phase == "ended" then
 		puntos = puntos + 1
 		scoreText.text = "Destroyed: " .. puntos
+		x = self.x
+		y = self.y
 		self:removeSelf()
+		explosion = display.newImageRect("images/mathias/weaponsExplosion.png", 70, 70)
+		explosion.x = x
+		explosion.y = y
+		transition.fadeOut(explosion, { time = 1650,  })
+
+		if puntos == 10 then
+			taskCompletedText.isVisible = true
+			scoreText.isVisible = false
+		end
 	end
 	return true
 end
 
-local function hideApple(self)
+local function hideMeteor(self)
 	self.isVisible = false
 end
 
-function crearManzanas()
+local function createMeteor( i )
+	meteor = display.newImageRect("images/mathias/weaponsMeteor.png", 70, 70)
+	meteor.x = fondo.width * 1.25
+	meteor.y = math.random(ch / 2 - fondo.height / 2, ch / 2 + fondo.height / 2)
+
+	meteor.touch = destoryMeteor
+	meteor:addEventListener("touch", meteor[i])
+	meteor.se_puede_matar = true
+
+	posx = (cw / 2 - fondo.width / 2)
+	posy = math.random(0, ch)
+	grupo_intermedio:insert(meteor)
+	transition.to(meteor, { time = 1650, x = posx, y = posy, onComplete = hideMeteor })
+end
+
+function createMeteors()
 	scoreText.isVisible = true
 	startText.isVisible = false
+	puntos = 0
 
-	for i = 1, cantidad_de_manzanas, 1 do
-		manzanas[i] = display.newImageRect("images/mathias/f1.png", 50, 50)
-		manzanas[i].x = fondo.width * 1.5
-		manzanas[i].y = math.random(ch / 2 - fondo.height / 2, ch / 2 + fondo.height / 2)
-
-		manzanas[i].touch = destruirManzana
-		manzanas[i]:addEventListener("touch", manzanas[i])
-		manzanas[i].se_puede_matar = true
-
-		posx = (cw / 2 - fondo.width / 2) - manzanas[i].width / 2
-		posy = math.random(0, ch)
-		grupo_intermedio:insert(manzanas[i])
-		manzanas[i].transition = transition.to(manzanas[i], { time = 5000, x = posx, y = posy, onComplete = hideApple, tag = "movimiento" })
-
-	end
+	timer.performWithDelay( 500, createMeteor, 10 )
 end
 
 function atras(e)
@@ -75,21 +86,23 @@ function scene:create(event)
 	sceneGroup:insert(1, grupo_background)
 	sceneGroup:insert(grupo_delantero)
 
-	fondo = display.newImageRect("images/mathias/1.jpg", cw * 0.6, ch * 0.75)
+	fondo = display.newImageRect("images/mathias/weaponsScreen.png", cw * 0.6, ch * 0.75)
 	fondo.x = cw / 2;
 	fondo.y = ch / 2
 
-	atrasText = createText("ATRAS", 0, 0, 50)
+	atrasText = createText("BACK", 0, 30, 50)
 	atrasText:addEventListener("touch", atras)
 	atrasText.isVisible = false
 
-	puntos = 0
-	scoreText = createText("Destroyed: 0", cw * 0.5, ch * 0.8, 50)
+	scoreText = createText("Destroyed: 0", cw / 2, ch*0.94, 80)
 	scoreText.isVisible = false
 
 	startText = createText("START", cw / 2, ch / 2, 50)
-	startText:addEventListener("touch", crearManzanas)
+	startText:addEventListener("touch", createMeteors)
 	startText.isVisible = false
+
+	taskCompletedText = createText("Task Completed!", cw / 2, ch*0.94, 80)
+	taskCompletedText.isVisible = false
 
 	grupo_background:insert(fondo)
 end
@@ -109,10 +122,6 @@ function scene:show(event)
 		-- Code here runs when the scene is entirely on screen
 		atrasText.isVisible = true
 		startText.isVisible = true
-
-
-		print("cantidad_de_manzanas_del_nivel ", cantidad_de_manzanas)
-		--crearManzanas(cantidad_de_manzanas, 50,50)
 	end
 end
 
@@ -125,6 +134,7 @@ function scene:hide(event)
 		-- Code here runs when the scene is on screen (but is about to go off screen)
 		atrasText.isVisible = false
 		startText.isVisible = false
+		taskCompletedText.isVisible = false
 
 		scoreText.isVisible = false
 		scoreText.text = "Destroyed: 0"
