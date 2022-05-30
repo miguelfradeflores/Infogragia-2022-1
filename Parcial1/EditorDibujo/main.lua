@@ -173,7 +173,10 @@ function canvas:touch(event)
 			else
 				triangulo.yScale = (event.y/y1)*6
 			end
-
+			Tstroke = math.max(triangulo.strokeWidth/math.log10(triangulo.xScale+triangulo.yScale),1)
+			if Tstroke <= strok then
+				triangulo.strokeWidth = Tstroke
+			end
 		end
 		return
 	end
@@ -182,10 +185,3 @@ function canvas:touch(event)
 end
 
 canvas:addEventListener("touch",canvas)
-
-
--- cuadrado = display.newRect(cw/2, ch/2,50,50)
--- 			cuadrado.strokeWidth=5
--- 			cuadrado:setStrokeColor(unpack(baseColor))
--- 			cuadrado:setFillColor(unpack(Backcolor))
--- 			cuadrado.anchorX = 0 ; cuadrado.anchorY=0
