@@ -9,7 +9,5 @@ cw = display.contentWidth
 ch = display.contentHeight
 
 local composer = require "composer"
-
-
 composer.gotoScene("juego")
 
