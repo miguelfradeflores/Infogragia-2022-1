@@ -14,7 +14,7 @@ local function onTextTouch(self, event)
 			composer.gotoScene("level01", "slideLeft", 500)
 		end
 		if text == "LEVEL 2" then
-		composer.gotoScene("level02", "slideLeft", 500)
+			composer.gotoScene("level02", "slideLeft", 500)
 		end
 		--if text == "LEVEL 3" then
 		--composer.gotoScene("level03", "slideLeft", 500)
@@ -22,9 +22,9 @@ local function onTextTouch(self, event)
 		if text == "LEVEL 4" then
 			composer.gotoScene("level04", "slideLeft", 500)
 		end
-		--if text == "LEVEL 5" then
-		--composer.gotoScene("level05", "slideLeft", 500)
-		--end
+		if text == "LEVEL 5" then
+			composer.gotoScene("level05", "slideLeft", 500)
+		end
 		--if text == "LEVEL 6" then
 		--composer.gotoScene("level06", "slideLeft", 500)
 		--end
