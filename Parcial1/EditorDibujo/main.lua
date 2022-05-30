@@ -28,7 +28,7 @@ canvas:setFillColor(unpack(Backcolor))
 local idTool = 0 
 local strok=5
 local eraStrok=30
-local baseColor={1,0,0}
+local baseColor=negro
 -- Grupo de dibujos
 local grp_drawings=display.newGroup()
 local moveRectP3
@@ -54,6 +54,7 @@ function selectTool(self,event)
 end
 
 local icons = {}
+local nIcons
 for i,v in ipairs(iconsIm) do
 	icons[i] = display.newImageRect(v,50,50)
 	icons[i].anchorX=1;icons[i].anchorY=1
@@ -62,12 +63,20 @@ for i,v in ipairs(iconsIm) do
 	icons[i].touch = selectTool
 	icons[i]:addEventListener("touch",icons[i])
 	icons[i].id = i
+	nIcons = i
 end
+
+local circleColor
+circleColor = display.newCircle(menuBar.x+60,menuBar.y+70*(nIcons+1),25)
+circleColor:setStrokeColor(unpack(baseColor))
+circleColor:setFillColor(unpack(baseColor))
+circleColor.anchorX = 1 ; circleColor.anchorY=1
+
 -- Paleta de colores
 function selColor(self,event)
 	if event.phase == "ended" then
 		baseColor = self.color
-		print("entrado")
+		circleColor:setFillColor(unpack(self.color))
 	end
 	return
 end
@@ -185,3 +194,4 @@ function canvas:touch(event)
 end
 
 canvas:addEventListener("touch",canvas)
+print()
