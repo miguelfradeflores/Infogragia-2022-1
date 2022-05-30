@@ -80,31 +80,6 @@ local ahc = 0
 local winner
 --WORD GENERAL FUNCTIONS
 
-function checkWord(word) 
-
-    for index, value in ipairs(arregloPalabras) do
-        if value[1] ==word then
-            value[6] = 1
-            return true
-        end
-    end
-    return false
-end
-
-function checkWin() 
-
-    for index, value in ipairs(arregloPalabras) do
-        if value[6] == 0 then
-            return false
-        end
-    end
-    print("GANOOO EL NIVEL")
-
-    
-
-    return true
-end
-
 function getLetters( arreglo)
 
     for index, value in ipairs(arreglo) do
@@ -171,6 +146,7 @@ function getIndex(str, elem)
     end
     return aux
 end
+
 
 --SQUARE FUNCTIONS
 function createSquare(x,y, awc, ahc, indice ,word, letter)
@@ -277,12 +253,10 @@ function createBigCircle(largo)
 end
 function createArrayCircles(bx,by,br,letterArray)
     numCirculos = #letterArray
-    print("sent mini:", bx,by, br);
     radio = calculoMiniRadio(numCirculos,br);
     division = math.pi*2 / numCirculos;
     hipotenusa = br - radio
 
-    print("ARREGLO LETRAS:", arregloLetras);
     local j = 1;
     for i=0, (math.pi *2)-division , division do
         x = math.cos(i) *  (hipotenusa-6)
@@ -312,7 +286,6 @@ end
 
 function calculoMiniRadio(numCirculos, radioGrande)
     local r = ((math.tan(math.pi/numCirculos))/(math.tan(math.pi/numCirculos)+1  ))*radioGrande
-    print("tan ang", math.tan(math.pi/numCirculos))
     if r < radioGrande*0.3 then
         return r
     end
@@ -369,7 +342,7 @@ function selectMiniCircle(self, event)
         end
         
     elseif event.phase == "ended" then
-        print("ENDED MINI ===")
+            print("ENDED MINI EVENT")
         
             actionWWord(selectedLetters);
         
@@ -435,6 +408,70 @@ function selectOutside(event)
     end
 end
 
+
+
+--LETTER OBJECT FUNCTIONS
+function createLetterObject(text,x,y,fs,grupo)
+    
+    options.text = text
+    options.x = x
+    options.y = y
+    options.fontSize = fs
+    local myText = display.newText(options);
+    myText:setFillColor(0,0,0);
+    myText:toFront()
+    grupo:insert(myText)
+end
+
+--Word that is forming
+function createChangingLetter(text,x,y,fs,grupo)
+    optionsArmado.text = optionsArmado.text..text
+    optionsArmado.x = x
+    optionsArmado.y = y
+    optionsArmado.fontSize = fs
+    display.remove(myText);
+    display.remove(wordBox)
+    
+    myText = display.newText(optionsArmado);
+    myText:setFillColor(0,0,0);
+    myText:toFront()
+
+
+    wordBox = display.newRoundedRect(optionsArmado.x,optionsArmado.y,myText.width+20,myText.height+20,30);
+    wordBox:setFillColor(unpack(blue));
+   
+    grupo:insert(wordBox)
+    grupo:insert(myText)
+end
+
+
+
+--FINAL FUNCTIONS
+function checkWord(word) 
+
+    for index, value in ipairs(arregloPalabras) do
+        if value[1] ==word then
+            value[6] = 1
+            return true
+        end
+    end
+    return false
+end
+
+function checkWin() 
+
+    for index, value in ipairs(arregloPalabras) do
+        if value[6] == 0 then
+            return false
+        end
+    end
+    print("GANOOO EL NIVEL")
+
+    
+
+    return true
+end
+
 --CHOOSING
 function actionWWord(selectedLetters)
     local word = ""
@@ -447,8 +484,8 @@ function actionWWord(selectedLetters)
         revealWord(word)
         winner = checkWin()
         if winner then
+            
             overlayOptions.params.winner = true
-
             fondo:removeEventListener( "touch", selectOutside )
             grupoRedondo:removeEventListener( "touch", selectBigCircle )
             for index, value in ipairs(circles) do
@@ -484,39 +521,7 @@ function changeColor(color)
 end
 
 
---LETTER CIRCLE FUNCTIONS
-function createLetterObject(text,x,y,fs,grupo)
-    
-    options.text = text
-    options.x = x
-    options.y = y
-    options.fontSize = fs
-    local myText = display.newText(options);
-    myText:setFillColor(0,0,0);
-    myText:toFront()
-    grupo:insert(myText)
-end
 
---Word that is forming
-function createChangingLetter(text,x,y,fs,grupo)
-    optionsArmado.text = optionsArmado.text..text
-    optionsArmado.x = x
-    optionsArmado.y = y
-    optionsArmado.fontSize = fs
-    display.remove(myText);
-    display.remove(wordBox)
-    
-    myText = display.newText(optionsArmado);
-    myText:setFillColor(0,0,0);
-    myText:toFront()
-
-
-    wordBox = display.newRoundedRect(optionsArmado.x,optionsArmado.y,myText.width+20,myText.height+20,30);
-    wordBox:setFillColor(unpack(blue));
-   
-    grupo:insert(wordBox)
-    grupo:insert(myText)
-end
 
 --Pause listener
 function pauseGame(e)
@@ -547,11 +552,11 @@ function scene:show( event )
 
      
     if ( event.phase == "will" ) then
-        print("===========SCENE LEVEL SHOW WILL")
+        
 
     elseif ( event.phase == "did" ) then
-        print("===========SCENE SHOW DID")
-            local sceneGroup = self.view
+      
+        local sceneGroup = self.view
 
         
         arregloPalabras = event.params.arregloPalabras

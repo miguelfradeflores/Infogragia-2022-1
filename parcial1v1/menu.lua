@@ -32,20 +32,19 @@ local music = audio.loadSound( "music/inHeat.mp3" )
 
 local musicB
 
-     optionsL = {
-        effect = "crossFade",
-        time = 1500,
-        params = {
-            arregloPalabras = {
-                {"alma",1,1,4,1,0},
-                {"llama",2,1,1,5,0},
-                {"mala",1,3,4,1,0},
-                {"malla",1,5,5,1,0}
-                
-            }
+    optionsL = {
+    effect = "crossFade",
+    time = 1500,
+    params = {
+        arregloPalabras = {
+            {"alma",1,1,4,1,0},
+            {"llama",2,1,1,5,0},
+            {"mala",1,3,4,1,0},
+            {"malla",1,5,5,1,0}
+            
         }
     }
-
+}
 
 function jugar(e)
 
@@ -134,8 +133,6 @@ function scene:create( event )
 
     grupo_delantero:insert(musicB)
 
-   
-
     options = {
         text = "WELCOME TO",
         x = cw/2,
@@ -143,8 +140,6 @@ function scene:create( event )
         font = "fonts/OrganicRelief.ttf",
         fontSize = 90
     }
-   
-
    
     text = display.newText(options)
     text:setFillColor(0,0,0)
@@ -158,13 +153,7 @@ function scene:create( event )
     text.y = ch/2 - (ch/2 * 0.3)
     grupo_background:insert(text)
 
-    
-
-
-
-
 end
-
 
 -- show()
 function scene:show( event )
@@ -179,10 +168,8 @@ function scene:hide( event )
   
 end
  
- 
 -- destroy()
 function scene:destroy( event )
- 
     
 end
  

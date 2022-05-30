@@ -101,13 +101,8 @@ end
 function scene:show( event )
     local sceneGroup = self.view
     if ( event.phase == "will" ) then
-        print("SCENE SHOW WILL")
 
     elseif ( event.phase == "did" ) then
-        print("SCENE SHOW DID")
-
-
-
             
         grupo_background = display.newGroup( )
         grupo_intermedio = display.newGroup( )
@@ -127,7 +122,6 @@ function scene:show( event )
         }
 
 
-        print("Params:", event.params.winner)
 
         if (event.params.winner == true) then
         

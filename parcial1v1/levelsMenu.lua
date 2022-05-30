@@ -145,20 +145,14 @@ end
 function scene:show( event )
  
     local sceneGroup = self.view
-   
 
-    if ( event.phase == "will" ) then
-        print("SCENE SHOW WILL")
+    if ( event.phase == "will" ) then   
 
     elseif ( event.phase == "did" ) then
-        print("SCENE SHOW DID")
         
     end
     
-        
-    
-    
-    
+
 end
  
  
