@@ -6,70 +6,64 @@ local scene = composer.newScene()
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
- 
--- cw = display.contentWidth
--- ch = display.contentHeight
- 
- 
+
+-- -----------------------------------------------------------------------------------
+-- Functions
+-- -----------------------------------------------------------------------------------
+function dist_puntos(ax, ay, bx, by)
+    -- body
+    return math.sqrt(math.pow(ax-bx,2)+math.pow(ay-by,2))
+end
+
+function iniciarJuego( event )
+
+
+	if( event.phase == "ended") then
+		print( "Fase del ended", event.x, event.y )
+		composer.gotoScene( "juegoNivel", {
+            effect = "slideLeft",
+            time =  2000,
+            params = {
+                nivel = 1,
+                balasInicio  =3,
+                balasFinal = 3,
+                puntaje = 0,
+                tiempo = 33,
+                escenario = "fondo1.jpg"
+            } 
+        })
+	end
+	return true
+end
+
+
+function crearBoton()
+
+    botonInicio = display.newImageRect( "start.jpg", 150, 100 )
+    botonInicio.x = cw/2;   botonInicio.y =(ch/2)+200
+    botonInicio:addEventListener( "touch", iniciarJuego )
+
+end
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
-function jugar(self, e)
-    print( "INICIANDO METODO JUGAR" )
-
-    if e.phase == "ended" then
-        composer.removeScene( "menu"  )
-        composer.gotoScene( "juego", {
-          effect =  "slideLeft", 
-          time = 2000, 
-          params = {
-            cantidad_de_manzanas = self.cantidad
-            }
-         } )
-
-    end
-    return true
-end
-
--- function ir_nivel2(e)
---     if e.phase == "ended" then
---         composer.removeScene( "juego"  )
---         composer.gotoScene( "nivel2", {
---           effect =  "slideLeft", 
---           time = 2000, 
---           params = {
---             cantidad_de_manzanas = 30
---             }
---          } )
---     end
---     return true
--- end
 
 -- create()
 function scene:create( event )
  
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-    fondo = display.newRect( sceneGroup, cw/2, ch/2, cw, ch )
-    fondo:setFillColor( 0.42 )
-    fondo.touch = jugar
-    fondo.cantidad = 10
-    fondo:addEventListener( "touch", fondo )
+    fondoM = display.newImageRect( "menu.jpg", cw, ch )
+    fondoM.x = 0;	fondoM.y = 0
+	fondoM.anchorX = 0;	fondoM.anchorY = 0
 
-    manzana = display.newImage(sceneGroup, "f1.png", math.random( 0,cw ), math.random(0,ch) )
+	inicio = display.newText("Inicio", cw/2, ch/2-100, "arial", 50)
 
-    boton_nivel2 = display.newImageRect(sceneGroup, "play.png", 150,150)
-    boton_nivel2.x = cw/2; boton_nivel2.y  = ch/2
-    boton_nivel2.touch = jugar
-    boton_nivel2.cantidad = 30
 
-    boton_nivel2:addEventListener( "touch", boton_nivel2 )
 
-<<<<<<< HEAD
-    manzana = display.newImage(sceneGroup, "f1.png", math.random( 0,cw ), math.random(0,ch) )
-=======
->>>>>>> e897a5119c246655df366066fff3b5db79136862
+    crearBoton()
 end
+
  
  
 -- show()
@@ -80,13 +74,9 @@ function scene:show( event )
  
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
-        manzana = display.newImage(sceneGroup, "f1.png", math.random( 0,cw ), math.random(0,ch) )
-        manzana.xScale = 0.5; manzana.yScale = 0.5
- 
+
     end
 end
  
@@ -102,7 +92,9 @@ function scene:hide( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-            
+        fondoM.isVisible = false
+        botonInicio.isVisible = false
+        inicio.isVisible = false
     end
 end
  
@@ -124,5 +116,4 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 -- -----------------------------------------------------------------------------------
- 
 return scene
