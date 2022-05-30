@@ -48,6 +48,14 @@ black = { 0, 0, 0}
 letter_column_counter = 0 -- para ver en que letra de las palabras
 word_row_counter = 0      -- estamos
 
+last_col = letter_column_counter
+last_row = word_row_counter
+
+-- variables IMPORTANTES
+matrizCeldasLetras = {}
+matrizCeldasLetras[word_row_counter] = {} -- agregamos fila
+palabraActual = ""
+
 -- funciones de creacion de objetos
 function crearBloqueLetraInput(posX,posY) -- bloque de letras (abajo)
     bloque = display.newRect(posX, posY, acw, ach)
@@ -62,20 +70,58 @@ function crearBloqueLetraPalabra(posX,posY) -- bloque de palabras (arriba)
     bloque:setStrokeColor(unpack(dark_grey))
 end
 function crearLetraBloque(posX, posY, palabra) -- letras del teclado de input (abajo)
-    myText = display.newText( palabra, posX, posY, "arial", 35 )
+    myText = display.newText( palabra, posX, posY, "arial", 40 )
     myText.anchorX = 0; myText.anchorY = 0
     myText:setFillColor(unpack(black))
     myText:toFront()
     ---------------------------
-    myText.touch = escribirLetra -- le asignamos la funcion escribirLetra 
-    myText.letra = palabra -- le agregamos su valor letra a cada letra de los bloques
-    myText:addEventListener("touch", myLetter) -- agregamos eventos cuando toquen
+    if myText.text == "<=" then
+        myText.touch = borrarLetra -- le asignamos la funcion borrarLetra 
+        myText:addEventListener("touch", myLetter) -- agregamos eventos cuando toquen
+    elseif myText.text == "=>" then
+        myText.touch = enviarPalabra -- le asignamos la funcion enviarPalabra 
+        myText:addEventListener("touch", myLetter) -- agregamos eventos cuando toquen
+    else
+        myText.touch = escribirLetra -- le asignamos la funcion escribirLetra 
+        myText.letra = palabra -- le agregamos su valor letra a cada letra de los bloques
+        myText:addEventListener("touch", myLetter) -- agregamos eventos cuando toquen
+    end
 end
 function crearLetra(posX, posY, letra) -- letra que va en bloque de palabras (arriba)
     myLetter = display.newText( letra, posX, posY, "arial", 35 )
     myLetter.anchorX = 0; myLetter.anchorY = 0
     myLetter:setFillColor(unpack(black))
     myLetter:toFront()
+
+    print("word_row_counter: ", word_row_counter, "letter_column_counter: ", letter_column_counter)
+    if letter_column_counter <= 4 then
+        if letter_column_counter == 4 then
+            matrizCeldasLetras[word_row_counter][letter_column_counter] = myLetter
+            print("Tamano fila: ", #matrizCeldasLetras[word_row_counter]+1)
+            print("Escribimos la letra: ", matrizCeldasLetras[word_row_counter][letter_column_counter].text)
+            for i=0, #matrizCeldasLetras[word_row_counter] do
+                palabraActual = palabraActual .. matrizCeldasLetras[word_row_counter][letter_column_counter].text
+                break
+            end
+            print("Palabra: ", palabraActual)
+
+            enviarPalabra() -- ENVIAMOS LA PALABRA DE 5 CARACTERES
+            print("creamos nueva fila")
+            palabraActual = ""
+            matrizCeldasLetras[word_row_counter+1] = {}
+            return
+        end
+        matrizCeldasLetras[word_row_counter][letter_column_counter] = myLetter
+        print("Tamano fila: ", #matrizCeldasLetras[word_row_counter]+1)
+        print("Escribimos la letra: ", matrizCeldasLetras[word_row_counter][letter_column_counter].text)
+        for i=0, #matrizCeldasLetras[word_row_counter] do
+            palabraActual = palabraActual .. matrizCeldasLetras[word_row_counter][letter_column_counter].text
+            break
+        end
+        print("Palabra: ", palabraActual)
+    end
+    
+    return myLetter
 end
 
 -- FONDO
@@ -177,7 +223,6 @@ function crearBloqueDePalabras()
             end
             crearBloqueLetraPalabra(acw*(jCBT+auxCrearBloquesPalabras)+(acw*4), ach*8.5)
         end
-        --print(i, j)
         jCBT = jCBT + 1
     end
 end
@@ -187,52 +232,83 @@ auxXletra = 0
 auxXletra2 = 0
 auxYletra = 0
 function escribirLetra(self, e)
-    -- letter_column_counter
-    -- word_row_counter
-
-    print("Escribimos la letra: ", self.letra)
     if e.phase == "ended" then
         auxXletra2 = auxXletra2 + 0.5
-        print(letter_column_counter, word_row_counter)
         if word_row_counter <= 5 then
-            if word_row_counter == 0 then
-                --print("PRIMER IF")
-                if letter_column_counter < 4 then
-                    crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(1.2), self.letra)
-                    letter_column_counter = letter_column_counter + 1
+                if word_row_counter == 0 then
+                    if letter_column_counter < 4 then
+                        crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(1.2), self.letra)
+                        
+                        letter_column_counter = letter_column_counter + 1
+                        last_col = letter_column_counter
 
-                    auxXletra = auxXletra + 1
-                    return
-                elseif letter_column_counter == 4 then
-                    crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(1.2), self.letra)
-                    letter_column_counter = 0
-                    word_row_counter = word_row_counter + 1
+                        auxXletra = auxXletra + 1
+                        return
+                    elseif letter_column_counter == 4 then
+                        crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(1.2), self.letra)
+                        letter_column_counter = 0
+                        last_col = last_col + 1
+                        last_row = word_row_counter
+                        word_row_counter = word_row_counter + 1
 
-                    auxXletra2 = 0
-                    auxXletra = 0
-                    return
+                        auxXletra2 = 0
+                        auxXletra = 0
+                        return
+                    end
+                elseif word_row_counter > 0 then
+                    if letter_column_counter == 4 then
+                        crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(2.5+auxYletra+0.2), self.letra)
+                        letter_column_counter = 0
+                        last_col = last_col + 1
+                        last_row = word_row_counter
+                        word_row_counter = word_row_counter + 1
+
+                        auxXletra2 = 0
+                        auxXletra = 0
+                        auxYletra = auxYletra + 1.5
+                    elseif letter_column_counter < 4 then
+                        crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(2.5+auxYletra+0.2), self.letra)
+                        
+                        letter_column_counter = letter_column_counter + 1
+                        last_col = letter_column_counter
+
+                        auxXletra = auxXletra + 1
+                    end
                 end
-            elseif word_row_counter > 0 then
-                --print("SEGUNDO IF")
-                if letter_column_counter == 4 then
-                    crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(2.5+auxYletra+0.2), self.letra)
-                    letter_column_counter = 0
-                    word_row_counter = word_row_counter + 1
-
-                    auxXletra2 = 0
-                    auxXletra = 0
-                    auxYletra = auxYletra + 1.5
-                elseif letter_column_counter < 4 then
-                    crearLetra(acw*(auxXletra+auxXletra2)+(acw*4)+10, ach*(2.5+auxYletra+0.2), self.letra)
-                    letter_column_counter = letter_column_counter + 1
-
-                    auxXletra = auxXletra + 1
-                end
-            end
         else
             print("LIMITE DE PALABRAS!")
         end
     end
+end
+
+function borrarLetra(self, e)
+    if e.phase == "ended" then
+        if letter_column_counter > 0 then
+            print("eliminamos fila:", last_row, "columna:", last_col-1)
+            display.remove(matrizCeldasLetras[word_row_counter][last_col-1])
+            table.remove(matrizCeldasLetras[word_row_counter][last_col-1])
+            palabraActual = palabraActual:sub(1, #palabraActual-1)
+
+            letter_column_counter = letter_column_counter - 1
+            last_col = letter_column_counter 
+            print("Palabra acutal: ", palabraActual)
+
+            auxXletra = auxXletra - 1
+            auxXletra2 = auxXletra2 - 0.5
+        else
+            print("No hay nada que borrar :)")
+        end
+
+    end
+end
+
+function enviarPalabra()
+        if last_col == 4 then
+            print("Verificamos la palabra:", palabraActual)
+            return
+        else
+            print("No puedes enviar una palabra que no sea de 5 letras!")
+        end
 end
 
 crearBloqueDeTeclado()
