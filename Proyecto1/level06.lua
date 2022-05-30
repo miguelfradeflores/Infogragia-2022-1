@@ -7,6 +7,8 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local nodeGroup = display.newGroup()
 local background, ship, backButton
+local shipStartSound = audio.loadStream("sounds/level06/level06-start.mp3")
+local shipFinishSound = audio.loadStream("sounds/level06/level06-end.mp3")
 
 local function createImageRectObject(group, file, w, h, x, y)
 	local object = display.newImageRect(group, file, w, h, x, y)
@@ -21,6 +23,7 @@ end
 local function onBackButtonTouch(self, event)
 	if event.phase == "ended" then
 		composer.gotoScene("title", "slideRight", 2000)
+		audio.play(closeTaskSound)
 	end
 	return true
 end
@@ -32,6 +35,7 @@ local function onNodeOneTouch(self, event)
 
 	if event.phase == "ended" then
 		transition.to(ship, { x = cw * 0.27, y = ch * 0.74, time = 1000, onComplete = t_rotateShip })
+		audio.play(shipStartSound)
 	end
 end
 
@@ -42,6 +46,7 @@ local function onNodeTwoTouch(self, event)
 
 	if event.phase == "ended" then
 		transition.to(ship, { x = cw * 0.54, y = ch * 0.3, time = 1000, onComplete = t_rotateShip })
+		audio.play(shipStartSound)
 	end
 end
 
@@ -52,6 +57,7 @@ local function onNodeThreeTouch(self, event)
 
 	if event.phase == "ended" then
 		transition.to(ship, { x = cw * 0.62, y = ch * 0.75, time = 1000, onComplete = t_rotateShip })
+		audio.play(shipStartSound)
 	end
 end
 
@@ -63,6 +69,8 @@ local function onNodeFourTouch(self, event)
 	if event.phase == "ended" then
 		transition.to(ship, { x = cw * 0.8, y = ch * 0.36, time = 1000, onComplete = t_rotateShip })
 		transition.fadeIn(backButton, { time = 1000 })
+		audio.play(shipFinishSound)
+		audio.play(completedTaskSound)
 	end
 end
 
@@ -100,6 +108,8 @@ function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
 
+
+	audio.play(startTaskSound)
 	node1.touch = onNodeOneTouch
 	node1:addEventListener("touch", node1)
 	node2.touch = onNodeTwoTouch

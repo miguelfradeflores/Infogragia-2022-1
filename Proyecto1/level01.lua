@@ -22,7 +22,7 @@ local function playSound()
 end
 
 function destoryMeteor(self, event)
-	local x,y
+	local x, y
 	if event.phase == "ended" then
 		audio.play(explosionSound)
 		score = score + 1
@@ -34,7 +34,7 @@ function destoryMeteor(self, event)
 		explosion = display.newImageRect("images/mathias/level01/weaponsExplosion.png", 70, 70)
 		explosion.x = x
 		explosion.y = y
-		transition.fadeOut(explosion, { time = 1650,  })
+		transition.fadeOut(explosion, { time = 1650, })
 
 		if score == 10 then
 			audio.play(completedTaskSound)
@@ -53,7 +53,7 @@ local function hideMeteor(self)
 	end
 end
 
-local function createMeteor( i )
+local function createMeteor(i)
 	meteor = display.newImageRect("images/mathias/level01/weaponsMeteor.png", 70, 70)
 	meteor.x = background.width * 1.25
 	meteor.y = math.random(ch / 2 - background.height / 2, ch / 2 + background.height / 2)
@@ -74,7 +74,7 @@ function createMeteors()
 	score = 0
 	count = 0
 
-	timer.performWithDelay( 500, createMeteor, 10 )
+	timer.performWithDelay(500, createMeteor, 10)
 end
 
 function atras(e)
@@ -110,14 +110,14 @@ function scene:create(event)
 	backText:addEventListener("touch", atras)
 	backText.isVisible = false
 
-	scoreText = createText("Destroyed: 0", cw / 2, ch*0.94, 80)
+	scoreText = createText("Destroyed: 0", cw / 2, ch * 0.94, 80)
 	scoreText.isVisible = false
 
 	startText = createText("START", cw / 2, ch / 2, 50)
 	startText:addEventListener("touch", createMeteors)
 	startText.isVisible = false
 
-	taskCompletedText = createText("Task Completed!", cw / 2, ch*0.94, 80)
+	taskCompletedText = createText("Task Completed!", cw / 2, ch * 0.94, 80)
 	taskCompletedText.isVisible = false
 
 	grupo_background:insert(background)
@@ -179,4 +179,3 @@ scene:addEventListener("destroy", scene)
 -- -----------------------------------------------------------------------------------
 
 return scene
-

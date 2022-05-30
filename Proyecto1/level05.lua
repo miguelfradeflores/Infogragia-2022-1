@@ -12,6 +12,7 @@ local redComplete = false
 local blueComplete = false
 local yellowComplete = false
 local pinkComplete = false
+local wireSound = audio.loadStream("sounds/level05/level05-connect.mp3")
 
 local colorBlue = { 49 / 255, 40 / 255, 1 }
 local colorRed = { 253 / 255, 0, 2 / 255 }
@@ -37,6 +38,7 @@ local function onBackButtonTouch(self, event)
 	if event.phase == "ended" then
 		composer.gotoScene("title", "slideRight", 2000)
 		wireGroup.isVisible = false
+		audio.play(closeTaskSound)
 	end
 	return true
 end
@@ -44,6 +46,7 @@ end
 local function checkCompletion()
 	if redComplete and blueComplete and yellowComplete and pinkComplete then
 		backButton.isVisible = true
+		audio.play(completedTaskSound)
 	end
 end
 
@@ -51,6 +54,7 @@ function handleRedWire(self, event)
 	local finalX, finalY
 
 	if (event.phase == "moved") then
+		audio.play(wireSound)
 		self.x = event.x
 		self.y = event.y
 	elseif (event.phase == "ended") then
@@ -62,6 +66,7 @@ function handleRedWire(self, event)
 			aux.rotation = -11
 			redComplete = true
 			checkCompletion()
+			audio.play(wireSound)
 		end
 	end
 end
@@ -70,6 +75,7 @@ function handleBlueWire(self, event)
 	local finalX, finalY
 
 	if (event.phase == "moved") then
+		audio.play(wireSound)
 		self.x = event.x
 		self.y = event.y
 	elseif (event.phase == "ended") then
@@ -81,6 +87,7 @@ function handleBlueWire(self, event)
 			aux.rotation = 11
 			blueComplete = true
 			checkCompletion()
+			audio.play(wireSound)
 		end
 	end
 end
@@ -89,6 +96,7 @@ function handleYellowWire(self, event)
 	local finalX, finalY
 
 	if (event.phase == "moved") then
+		audio.play(wireSound)
 		self.x = event.x
 		self.y = event.y
 	elseif (event.phase == "ended") then
@@ -100,6 +108,7 @@ function handleYellowWire(self, event)
 			aux.rotation = -11
 			yellowComplete = true
 			checkCompletion()
+			audio.play(wireSound)
 		end
 	end
 end
@@ -108,6 +117,7 @@ function handlePinkWire(self, event)
 	local finalX, finalY
 
 	if (event.phase == "moved") then
+		audio.play(wireSound)
 		self.x = event.x
 		self.y = event.y
 	elseif (event.phase == "ended") then
@@ -117,9 +127,10 @@ function handlePinkWire(self, event)
 			pinkWireMark.isVisible = false
 			aux = createRectObject(wireGroup, colorPink, cw * 0.48, ch * 0.71, cw * 0.8, 30)
 			aux.rotation = 11
+			pinkComplete = true
+			checkCompletion()
+			audio.play(wireSound)
 		end
-		pinkComplete = true
-		checkCompletion()
 	end
 end
 
@@ -151,6 +162,7 @@ function scene:show(event)
 	local sceneGroup = self.view
 	local phase = event.phase
 
+	audio.play(startTaskSound)
 	redWireMark.touch = handleRedWire
 	redWireMark:addEventListener("touch", redWireMark)
 	blueWireMark.touch = handleBlueWire

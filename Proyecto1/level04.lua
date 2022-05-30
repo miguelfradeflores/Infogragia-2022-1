@@ -7,6 +7,7 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
 local scanGroup = display.newGroup()
 local background, bean, scanButton, backButton, scanCompleteText, progressBar, topScanText, bottomScanText
+local scanSound = audio.loadStream("sounds/level04/level04-scanSound.mp3")
 
 local function createImageRectObject(group, file, w, h, x, y)
     local object = display.newImageRect(group, file, w, h, x, y)
@@ -22,11 +23,13 @@ local function onBackButtonTouch(self, event)
     if event.phase == "ended" then
         composer.gotoScene("title", "slideRight", 2000)
         scanGroup.isVisible = false
+        audio.play(closeTaskSound)
     end
     return true
 end
 
 local function onScanButtonTouch(self, event)
+    audio.play(scanSound)
     local aura = createImageRectObject(scanGroup, "images/boris/level04/level04-scan-circle.png", cw * 0.2, ch * 0.1, cw * 0.55, ch * 0.8)
     topScanText = createImageRectObject(scanGroup, "images/boris/level04/level04-scan-text-top.png", cw * 0.5, ch * 0.35, cw * 0.4, ch * 0.24)
     topScanText.alpha = 0
@@ -39,6 +42,7 @@ local function onScanButtonTouch(self, event)
         transition.pause(blinkyBoi)
         backButton.isVisible = true
         aura.isVisible = false
+        audio.play(completedTaskSound)
     end
 
     local function t_auraDown()
@@ -80,10 +84,10 @@ end
 
 -- show()
 function scene:show(event)
-
     local sceneGroup = self.view
     local phase = event.phase
 
+    audio.play(startTaskSound)
     scanButton.touch = onScanButtonTouch
     scanButton:addEventListener("touch", scanButton)
 
