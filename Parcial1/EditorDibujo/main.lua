@@ -50,7 +50,7 @@ function selectTool(self,event)
 		idTool=self.id
 		print(idTool)
 	end
-	return
+	return true
 end
 
 local icons = {}
@@ -119,7 +119,7 @@ function canvas:touch(event)
 		if(event.phase== "moved") then
 			line:append(event.x,event.y)
 		end
-		return
+		-- return
 	elseif (idTool==2) then
 		if event.phase=="began" then
 			x1 = event.x
@@ -131,7 +131,7 @@ function canvas:touch(event)
 		if(event.phase== "moved") then
 			line:append(event.x,event.y)
 		end
-		return
+		-- return
 	elseif (idTool==3) then
 		if event.phase=="began" then
 			x1 = event.x
@@ -145,7 +145,7 @@ function canvas:touch(event)
 		if(event.phase== "moved") then
 			moveRectP3(cuadrado,x1,y1,event.x,event.y)
 		end
-		return
+		-- return
 	elseif (idTool==4) then
 		if event.phase=="began" then
 			x1 = event.x
@@ -159,7 +159,7 @@ function canvas:touch(event)
 		if(event.phase== "moved") then
 			alterRadius(circulo,x1,y1,event.x,event.y)
 		end
-		return
+		-- return
 	elseif (idTool==5) then
 		if event.phase=="began" then
 			x1 = event.x
@@ -187,10 +187,10 @@ function canvas:touch(event)
 				triangulo.strokeWidth = Tstroke
 			end
 		end
-		return
+		-- return
 	end
-
-	return
+	print("Cantidad de objetos",grp_drawings.numChildren)
+	return true
 end
 
 canvas:addEventListener("touch",canvas)
