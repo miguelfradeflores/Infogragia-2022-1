@@ -189,12 +189,13 @@ function secondLevel()
 
 	function buttonP:touch(e)
 		if e.phase == "ended" then
-			if cardGroup.isVisible then
-				cardGroup.isVisible = false
+			if cardGroup.alpha~=0.2 then
+				--cardGroup.isVisible = false
+				cardGroup.alpha = 0.2
 				transition.pause("firstLevel")
 			else
 				cardGroup.isVisible = true
-				transition.to(cardGroup, {time=1000, onComplete=reanudar})
+				transition.to(cardGroup, {time=1000, onComplete=reanudar, alpha = 1})
 			end
 		end
 	end
