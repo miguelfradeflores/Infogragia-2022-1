@@ -12,7 +12,7 @@ local paddingX = cw/12
 local paddingY = ch/12
 
 local inicio = 1
-local final = 9
+local final = 6
 
 
 
@@ -34,10 +34,10 @@ local posicion = 1
 
 function mover(self,event)
 	if(event.phase == "ended") then
+		posicion = posicion + self.direccion
 		print(self.direccion)
 
 		if posicion>inicio and posicion<final then
-			posicion = posicion + self.direccion
 			print("transition al siguiente cuadro ", posicion )
 			transition.to(grupo_background, {
 				x= arreglo_posiciones[posicion].x,
