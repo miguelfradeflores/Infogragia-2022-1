@@ -12,45 +12,62 @@ local paddingX = cw/12
 local paddingY = ch/12
 
 local inicio = 1
-local final = 6
-
+local final = 9
+local puede_seguir = true
 
 
 -- forward declarations and other locals
-local background, boton_adelante, boton_atras
+local background, boton_adelante, boton_atras, boton_inicio
 local grupo_background, grupo_intermedio, grupo_delantero
 -- function to show next animation
 
 -- touch event listener for background object
 
 local arreglo_posiciones = {
-	{x=0,y=0,xScale=1,yScale=1},
-	{x=0,y=0,xScale=1/5*12,yScale=1/6*16},
-	{x=-paddingX*6,y=0,xScale=1/7*12,yScale=1/7*16},
-	{x=-paddingX*7,y=-paddingY*7,xScale=1/6*12,yScale=1/8*16},
-	{x=0,y=0,xScale=1,yScale=1}
+	{x=0,y=0,xScale=1,yScale=1,time=2000},
+	{x=-paddingX*21.5,y=-paddingY*2,xScale=1/4*12,yScale=1/5*16,time=2000},
+	{x=-paddingX*21.5,y=-paddingY*20,xScale=1/4*12,yScale=1/5*16,time=4000},
+	{x=-paddingX*2.5,y=-paddingY*2,xScale=1/6*12,yScale=1/5.5*16,time=2000},
+	{x=-paddingX*15.7,y=-paddingY*21,xScale=1/3*12,yScale=1/4*16,time=2000},
+	{x=-paddingX*4.5,y=-paddingY*21,xScale=1/3*12,yScale=1/4*16,time=1000},
+	{x=-paddingX*4.5,y=-paddingY*34,xScale=1/5.2*12,yScale=1/4*16,time=2000},
+	{x=0,y=0,xScale=1,yScale=1,time=2000}
 }
-local posicion = 1
+_G.posicion = 1
 
 function mover(self,event)
-	if(event.phase == "ended") then
+	if(event.phase == "ended" and puede_seguir) then
 		posicion = posicion + self.direccion
-		print(self.direccion)
+		-- print(posicion)
 
-		if posicion>inicio and posicion<final then
+		if posicion>=inicio and posicion<final then
 			print("transition al siguiente cuadro ", posicion )
+			puede_seguir = false
 			transition.to(grupo_background, {
 				x= arreglo_posiciones[posicion].x,
 				y= arreglo_posiciones[posicion].y,
 				xScale=arreglo_posiciones[posicion].xScale,
 				yScale=arreglo_posiciones[posicion].yScale,
-				time=2000
+				time=arreglo_posiciones[posicion].time,
+				onComplete=(function() puede_seguir = true end)
 			})
+		elseif posicion==final then
+			composer.gotoScene( "back", "slideLeft", 800 )
 		end
 	end
 	return true
 end
-
+function volver( event )
+	composer.gotoScene("title","slideRight",800)
+	posicion = 1
+	transition.to(grupo_background, {
+			x= arreglo_posiciones[posicion].x,
+			y= arreglo_posiciones[posicion].y,
+			xScale=arreglo_posiciones[posicion].xScale,
+			yScale=arreglo_posiciones[posicion].yScale,
+			time=20
+		})
+end
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -69,36 +86,36 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 	
 	-- create background image
-	background = display.newImageRect( grupo_background, "batman5.jpg", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( grupo_background, "030.jpg", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
 
-	for i=0, 11 do
-		local LineaVertical = display.newLine(grupo_intermedio, paddingX*i, 0, paddingX*i, ch )
-		LineaVertical.strokeWidth = 4
-		LineaVertical:setStrokeColor( 1 )
-	end
 	
-	for i=0, 16 do
-		local LineaHorizontal = display.newLine(grupo_intermedio, 0, paddingY*i, cw, paddingY*i)
-		LineaHorizontal.strokeWidth = 4
-		LineaHorizontal:setStrokeColor( 1 )
-	end
 	
-	local fondo_botones = display.newRect(grupo_delantero, cw/2, ch, cw,180)
+	local fondo_botones = display.newRect(grupo_delantero, cw/2, ch, cw,100)
 	fondo_botones.anchorY = 1
-	fondo_botones:setFillColor(0)
+	fondo_botones:setFillColor(0.5,0.5,0.5,0.45)
 
 	boton_adelante = display.newImageRect(grupo_delantero, "next.png", 130,130)
-	boton_adelante.x = cw - 100; boton_adelante.y = ch-100 
+	boton_adelante.x = cw - 100; boton_adelante.y = ch-50 
 	boton_adelante.direccion = 1
 
+	boton_inicio = display.newImageRect(grupo_delantero, "home.png", 80,80)
+	boton_inicio.x = cw/2; boton_inicio.y = ch-50
+
 	boton_atras = display.newImageRect(grupo_delantero, "next.png", 130,130)
-	boton_atras.x = 100; boton_atras.y = ch-100 
+	boton_atras.x = 100; boton_atras.y = ch-50 
 	boton_atras.rotation = 180
 	boton_atras.direccion = -1
 
+	boton_adelante.touch = mover
+	boton_atras.touch = mover
+	boton_inicio.touch = volver
+
+	boton_atras:addEventListener("touch", boton_atras)
+	boton_adelante:addEventListener("touch", boton_adelante)
+	boton_inicio:addEventListener("touch", boton_inicio)
 end
 
 function scene:show( event )
@@ -108,13 +125,6 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		
-		boton_adelante.touch = mover
-		boton_atras.touch = mover
-
-		boton_atras:addEventListener("touch", boton_atras)
-		boton_adelante:addEventListener("touch", boton_adelante)
-
 	end	
 
 end
@@ -143,6 +153,7 @@ function scene:destroy( event )
 	-- 
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
+
 end
 
 ---------------------------------------------------------------------------------

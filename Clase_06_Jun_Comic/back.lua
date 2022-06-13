@@ -6,7 +6,8 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
-
+local cw = display.contentWidth
+local ch = display.contentHeight
 --------------------------------------------
 
 -- forward declaration
@@ -22,28 +23,50 @@ local function onBackgroundTouch( self, event )
 	end
 end
 
+function mover(self,event)
+	if(event.phase == "ended") then
+		_G.posicion = _G.posicion -1
+		composer.gotoScene( "page1", "slideRight", 800 )
+	end
+	return true
+end
+function volver( event )
+	composer.gotoScene("title","slideRight",800)
+	posicion = 1
+end
 function scene:create( event )
 	local sceneGroup = self.view
+	grupo_background = display.newGroup()
+	grupo_intermedio = display.newGroup()
+	grupo_delantero = display.newGroup()
 
-	-- Called when the scene's view does not exist.
-	-- 
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
+	sceneGroup:insert(grupo_background)
+	sceneGroup:insert(grupo_intermedio)
+	sceneGroup:insert(grupo_delantero)
 
 	-- display a background image
-	background = display.newImageRect( sceneGroup, "landOfLustrous.jpg", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( grupo_background, "back.jpg", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
 	
-	-- Add more text
-	local pageText = display.newText( "[ Touch screen to continue ]", 0, 0, native.systemFont, 18 )
-	pageText.x = display.contentWidth * 0.5
-	pageText.y = display.contentHeight - (display.contentHeight*0.1)	
-	
-	-- all display objects must be inserted into group
-	sceneGroup:insert( background )
-	sceneGroup:insert( pageText )
+	local fondo_botones = display.newRect(grupo_delantero, cw/2, ch, cw,100)
+	fondo_botones.anchorY = 1
+	fondo_botones:setFillColor(0.5,0.5,0.5,0.45)
+
+	boton_atras = display.newImageRect(grupo_delantero, "next.png", 130,130)
+	boton_atras.x = 100; boton_atras.y = ch-50 
+	boton_atras.rotation = 180
+	boton_atras.direccion = -1
+
+	boton_inicio = display.newImageRect(grupo_delantero, "home.png", 80,80)
+	boton_inicio.x = cw/2; boton_inicio.y = ch-50
+
+	boton_atras.touch = mover
+	boton_inicio.touch = volver
+
+	boton_atras:addEventListener("touch", boton_atras)
+	boton_inicio:addEventListener("touch", boton_inicio)
 end
 
 function scene:show( event )
@@ -53,13 +76,7 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-		-- Called when the scene is now on screen
-		-- 
-		-- INSERT code here to make the scene come alive
-		-- e.g. start timers, begin animation, play audio, etc.
 		
-		background.touch = onBackgroundTouch
-		background:addEventListener( "touch", background )
 	end
 end
 
@@ -69,12 +86,6 @@ function scene:hide( event )
 	
 	if event.phase == "will" then
 		-- Called when the scene is on screen and is about to move off screen
-		--
-		-- INSERT code here to pause the scene
-		-- e.g. stop timers, stop animation, unload sounds, etc.)
-
-		-- remove event listener from background
-		background:removeEventListener( "touch", background )
 		
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
