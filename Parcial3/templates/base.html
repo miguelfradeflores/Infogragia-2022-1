@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Aplicacion de graficas</title>
+        <!-- Bootstrap-->
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/offcanvas.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/blog.css') }}">
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+    </head>
+    <body class="bg-light">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+            <a class="navbar-brand mr-auto mr-lg-0" href="http://localhost:5000/">Navegacion</a>
+            <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="http://localhost:5000/">Inicio <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:5000/app">Aplicacion</a>
+                    </li>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        {%block content%}
+        {%endblock%}
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='assets/js/popper.js') }}"></script>
+        <script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('[data-toggle="offcanvas"]').on('click', function () {
+                    $('.offcanvas-collapse').toggleClass('open');
+                });
+            });
+        </script>
+    </body>
+</html>

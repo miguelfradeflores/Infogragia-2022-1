@@ -1,0 +1,86 @@
+{%extends "base.html"%}
+{%block content%}
+        <div class="container">
+            <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+                <div class="col-md-6 px-0">
+                    <h1 class="display-4 font-italic">Gráficos dinámicos</h1>
+                    <p class="lead my-3">Este proyecto busca ofrecer una alternativa interactiva y llamativa para la presentación de datos para los que comunmente se usan hojas de cálculo comerciales y dashboards.</p>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <strong class="d-inline-block mb-2 text-primary">Objetivo</strong>
+                            <h3 class="mb-0"> <a class="text-dark">Visualización efectiva</a> </h3>
+                            <p class="card-text mb-auto"><br></p>
+                            <p class="card-text mb-auto">Presentación precisa de datos en un formato visual muy agradable y de interacción amigable</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card flex-md-row mb-4 box-shadow h-md-250">
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <strong class="d-inline-block mb-2 text-success">Beneficios</strong>
+                            <h3 class="mb-0">Personalización&nbsp;</h3>
+                            <p class="card-text mb-auto"></p>
+                            <p class="card-text mb-auto">Selección de personalizada de datos a ser representados con cinco estilos diferentes de gráficas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-8 blog-main">
+                    <h3 class="pb-3 mb-4 font-italic border-bottom">Sobre el proyecto</h3>
+                    <div class="blog-post">
+                        <h2 class="blog-post-title">Presentación de datos</h2>
+                        <p>Una parte importante para la efectiva transmisión y entendimiento de la información reside en la presentación de la misma</p>
+                        <p>Con este pensamiento en mente se desarrollo esta herramienta a fin de facilitar al gestor de datos una elegante presentación de los mismos.</p>
+                        <h2>Fuentes de información</h2>
+                        <p>De momento la aplicación solo puede graficar el contenido de un archivo CSV subido a la aplicación por el usuario.</p>
+                        <p>Se tiene un espacio reservado a la subida de archivos locales. Favor asegurarse que el archivo sea un CSV delimitado por comas, de lo contrario no se podrá graficar.</p>
+                        <blockquote>
+</blockquote>
+                        <h2>Gráficas disponibles</h2>
+                        <p>La presente aplicación cuenta con 5 tipos de vistas para los datos. Tenga en cuenta que algunas de las vistas no son compatibles con algunos sets de datos.</p>
+                        <h3>Scatter</h3>
+                        <p>La gráfica de dispersión requiere de hasta 4 pares de datos a ser introducidos. Cada par corresponde a dos columnas cuyas filas sean numeros.&nbsp;</p>
+                        <p>Este tipo de gráficos es ideal para visualizar la relación de 2 variables numerales.</p>
+                        <h3>Line</h3>
+                        <p>Se cumplen los mismo requerimientos que para el gráfico scatter con respecto a los datos requeridos.</p>
+                        <p>La utilidad de este tipo de gráficos puede encontrarse para datos que representen una evolución en el tiempo. Otra utilidad menos común puede ser para graficar lineas con valores X e Y.</p>
+                        <ul>
+</ul>
+                        <h3>Barras</h3>
+                        <p>Se requiere una columna que contenga las etiquetas de las barras a representar. En conjunto, se pueden seleccionar un número arbitrario de columnas numéricas.</p>
+                        <ol>
+</ol>
+                        <p>Se tiene la opción de presentar las barras de manera horizontal o vertical, según se vea conveniente<span style="font-size: 1rem;">. Este tipo de gráficos es ideal para representar conjuntos con valores cuantitativos, al permitirse más de un conjunto de valores, se pueden visualizar las misma variables en diferentes contextos (ej. Ventas de los mismos productos en 2 meses diferentes).</span></p>
+                        <h3>Pie</h3>
+                        <p>Es requerido una columna con las etiquetas y otra con valores cuantitativos, este es el Tipo de gráfico que menos columnas necesita.</p>
+                        <p>Este tipo de gráficos permite ver las proporciones de diferentes variables en un mismo contexto.</p>
+                    </div>
+                    <!-- /.blog-post -->
+                    <!-- /.blog-post -->
+                    <!-- /.blog-post -->
+                </div>
+                <!-- /.blog-main -->
+                <aside class="col-md-4 blog-sidebar">
+                    <div class="p-3 mb-3 bg-light rounded">
+                        <h4 class="font-italic">Sobre las tecnologías</h4>
+                        <p class="mb-0">Para el presente se emplearon variedad de librerías y herramientas referentes al desarrollo web.</p>
+                        <p class="mb-0"><br></p>
+                        <p class="mb-0">Para el front-end se utilizó Ajax en conjunto con HTML5, CSS y Javascript. Para el backend se empleó Python a través del Framework Flask y para la generación de gráficos se empleó la librería Pyecharts</p>
+                    </div>
+                </aside>
+                <!-- /.blog-sidebar -->
+            </div>
+            <!-- /.row -->
+        </main>
+        <!-- /.container -->
+        <footer class="blog-footer">
+        </footer>
+
+{%endblock%}

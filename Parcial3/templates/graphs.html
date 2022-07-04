@@ -1,0 +1,225 @@
+{%extends "base.html"%}
+{%block content%}
+<main role="main" class="container">
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+        <div class="lh-100">
+            <h6 class="mb-0 text-white lh-100">Gráficas generadas</h6>
+            <small>Área de trabajo</small>
+        </div>
+    </div>
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Inserte un archivo .csv</h6>
+        <form role="form" method="POST" action="" enctype="multipart/form-data"> 
+            <div class="form-group"> 
+                <label for="exampleInputFile">Inserte archivo</label>                         
+                <input type="file" id="file" name="file"> 
+            </div>                     
+            <button type="submit" class="btn btn-primary">Submit</button>                     
+        </form>
+    </div>
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <form role="form" action="" enctype="multipart/form-data"> 
+
+            <h6 class="border-bottom border-gray pb-2 mb-0">Escoja el estilo de Gráfica</h6>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="graphs" id="Scatter" class="radioGrph" autocomplete="off" checked="true">&nbsp;Scatter&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                </label>                     
+                <label class="btn btn-secondary">
+                    <input type="radio" name="graphs" id="Lineal" class="radioGrph" autocomplete="off">&nbsp;Lineal&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                </label>                     
+                <label class="btn btn-secondary">
+                    <input type="radio" name="graphs" id="Bar" class="radioGrph" autocomplete="off">&nbsp;Bar&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="graphs" id="BarY" class="radioGrph" autocomplete="off">&nbsp;Bar Y&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="graphs" id="Pie" class="radioGrph" autocomplete="off">&nbsp;Pie&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                </label>
+            </div>
+            <h6 class="border-bottom border-gray pb-2 mb-0">Modifique sus datos</h6>
+            <table class="table" id="peers"> 
+                <thead> 
+                    <tr> 
+                        <th>X</th> 
+                        <th>Y</th> 
+                    </tr>                         
+                </thead>                     
+                <tbody> 
+                    <tr> 
+                        <th>
+                            <select class="custom-select x-sel"> 
+                                <option value="">Seleccione una columna</option>
+                                {%for columN in params.numCol%}                                    
+                                <option value="{{columN}}">{{columN}}</option>    
+                                {% endfor %}                                 
+                            </select>
+                        </th>
+                        <th>
+                            <select class="custom-select y-sel"> 
+                                <option value="">Seleccione una columna</option>
+                                {%for columN in params.numCol%}                                    
+                                <option value="{{columN}}">{{columN}}</option>    
+                                {% endfor %}                                     
+                            </select>
+                        </th>
+                    </tr>
+                </tbody>                     
+            </table>
+            <div class="form-group" id="multiCol" style="display:none;grid-template-columns:1fr 1.5fr;grid-template-rows:100px;grid-gap:18px;"> 
+                <label for="LabelSelector">Etiquetas de barras
+                    <select id="LabelSelector" class="form-control label-sel">
+                        <option value="">Seleccione una columna</option> 
+                        {%for columS in params.strCol%}                                    
+                        <option value="{{columS}}">{{columS}}</option>    
+                        {% endfor %}                             
+                    </select>
+                </label>                                          
+
+                <div class="" id="ColumnsN">
+                        {%for columN in params.numCol%}
+                        <div>
+                            <input type="checkbox" class="colum-n" id="{{columN}}NP" value="{{columN}}"/>
+                            <label class="custom-control-label">{{columN}}</label>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+            <table class="table" id="pies" style="display:none"> 
+                <thead> 
+                    <tr> 
+                        <th>Etiquetas</th> 
+                        <th>Datos</th> 
+                    </tr>                         
+                </thead>                     
+                <tbody> 
+                    <tr> 
+                        <th>
+                            <select class="custom-select pie-labels"> 
+                                <option value="">Seleccione una columna</option>
+                                {%for columS in params.strCol%}                                    
+                                <option value="{{columS}}">{{columS}}</option>    
+                                {% endfor %}                                       
+                            </select>
+                        </th>
+                        <th>
+                            <select class="custom-select pie-data"> 
+                                <option value="">Seleccione una columna</option>
+                                {%for columN in params.numCol%}                                    
+                                <option value="{{columN}}">{{columN}}</option>    
+                                {% endfor %}                                      
+                            </select>
+                        </th>
+                    </tr>
+                </tbody>                     
+            </table>
+            
+            <button type="submit" class="btn btn-primary" id="submitG">Submit</button>                     
+        </form>
+        <script>
+            var radios = document.querySelectorAll('input[type=radio][name="graphs"]');
+            var tablePeers = document.getElementById('peers')
+            var groupMulti = document.getElementById('multiCol')
+            var tablePie = document.getElementById('pies')
+            function changeHandler(event) {
+                if ( this.id === 'Scatter'||this.id === 'Lineal'  ) {
+                    tablePeers.style.display="table";
+                    groupMulti.style.display="none";
+                    tablePie.style.display="none";
+                } else if ( this.id === 'Bar'||this.id === 'BarY' ) {
+                    groupMulti.style.display="grid";
+                    tablePie.style.display="none";
+                    tablePeers.style.display="none";
+                }  else if ( this.id === 'Pie' ) {
+                    tablePie.style.display="table";
+                    tablePeers.style.display="none";
+                    groupMulti.style.display="none";
+                }  
+            }
+
+            Array.prototype.forEach.call(radios, function(radio) {
+            radio.addEventListener('change', changeHandler);
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                var chart = echarts.init(document.getElementById('graph'), 'gray', {renderer: 'canvas'});
+                $('#submitG').on('click',function(e) {
+                    e.preventDefault();
+                    var colA = [];
+                    var colB = [];
+                    var stylg = '';
+                    $('input.radioGrph:checked').each(function() {
+                        stylg = this.id;
+                        if ( this.id === 'Scatter'||this.id === 'Lineal'  ) {
+
+                            $('select.x-sel').each(function() {
+                                $(this).children('option:selected').each(function() {
+                                    if ($(this).val!='') {
+                                        colA.push($(this).val());
+                                    }
+                                });
+                            });
+                            $('select.y-sel').each(function() {
+                                $(this).children('option:selected').each(function() {
+                                    if ($(this).val!='') {
+                                        colB.push($(this).val());
+                                    }
+                                });
+                            });
+                        } else if ( this.id === 'Bar'||this.id === 'BarY' ) {
+                            $('#LabelSelector').each(function() {
+                                $(this).children('option:selected').each(function() {
+                                    if ($(this).val!='') {
+                                        colA.push($(this).val());
+                                    }
+                                });
+                            });
+                            $('.colum-n').each(function() {
+                                if($(this).is(':checked')){
+                                    colB.push($(this).val())
+                                }
+                                
+                            });
+                        }  else if ( this.id === 'Pie' ) {
+                            $('select.pie-labels').each(function() {
+                                $(this).children('option:selected').each(function() {
+                                    if ($(this).val!='') {
+                                        colA.push($(this).val());
+                                    }
+                                });
+                            });
+                            $('select.pie-data').each(function() {
+                                $(this).children('option:selected').each(function() {
+                                    if ($(this).val!='') {
+                                        colB.push($(this).val());
+                                    }
+                                });
+                            });
+                        } 
+                    });	
+                    console.log(colA,colB)				
+                    $.ajax({
+                        method: "POST",
+                        url: "http://localhost:5000/app/attrGet",
+                        data: {"colA":colA,"colB":colB,"style":stylg},
+                        cache: false,
+                        success: function(result){ 
+                            result = $.parseJSON(result)
+                            chart.setOption(result);
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+    
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div id="graph" style="width:1000px; height:600px;"></div>
+    </div> 
+    
+</main>
+
+{%endblock%}
+            
